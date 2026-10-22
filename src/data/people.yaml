@@ -1,0 +1,122 @@
+# 团队成员。role 可选：pi / faculty / postdoc / phd / master / undergrad / alumni
+# 头像放到 public/people/ 目录，然后写 avatar: /people/文件名.jpg；不写则自动生成首字母头像
+# 成员编号 LAB MEM 001… 默认按本文件顺序自动生成；想固定某人的编号可写 mem: 7（新成员加在末尾即可保持老成员编号不变）
+# aliases：论文作者列表里的其他写法（如 "R Huang"），用于在论文页自动加粗
+- id: ruochen-huang
+  role: pi
+  name: { zh: 黄若尘, en: Ruochen Huang }
+  aliases: [R Huang]
+  avatar: /people/ruochen-huang.webp
+  # TODO: 职称待确认
+  title: { zh: 南京医科大学 · 青年教师, en: Faculty Member · Nanjing Medical University }
+  interests:
+    zh: 电子病历智能诊断与预测、大模型虚拟患者、大语言模型健康问答、医疗大模型偏见与可信评估
+    en: "EHR-based clinical diagnosis and prediction, LLM-powered virtual patients, LLM-based health question answering, bias and trustworthiness of medical LLMs"
+  bio:
+    zh: 南京医科大学青年教师，长期从事人工智能与医学的交叉研究，主要方向包括基于电子病历的智能诊断与预测、大语言模型驱动的虚拟患者、面向青少年生殖健康等领域的健康问答大模型，以及医疗大模型的偏见与可信评估。已在 Journal of Medical Internet Research、IEEE Internet of Things Journal 等期刊和国际会议发表论文 30 余篇。
+    en: Ruochen Huang is a faculty member at Nanjing Medical University working at the intersection of artificial intelligence and medicine, with a focus on clinical diagnosis and prediction based on electronic health records, virtual patients powered by large language models, health question-answering LLMs for areas such as adolescent reproductive health, and bias and trustworthiness evaluation of medical LLMs. Ruochen has published over 30 papers in journals and conferences including the Journal of Medical Internet Research and the IEEE Internet of Things Journal.
+  email: huangrc@njmu.edu.cn
+  homepage: https://scholar.google.com/citations?user=DCDjlOYAAAAJ
+- id: yuan-yuhan
+  role: alumni
+  name: { zh: 袁彧涵, en: Yuhan Yuan }
+  aliases: [Y Yuan]
+  major: { zh: 智能医学工程 · 2020 级, en: Intelligent Medical Engineering · Class of 2024 }
+  period: 2022.09 – 2024.06
+  topics:
+    - { zh: 面向糖尿病的大模型问答系统设计与实践, en: Design and implementation of an LLM-based question-answering system for diabetes }
+  achievements:
+    - { type: paper, pub: jmir-2025-llm-ehr, zh: 第三作者, en: Third author }
+  now: { zh: 保研至 中国科学院神经科学研究所, en: "Graduate study, Institute of Neuroscience, Chinese Academy of Sciences" }
+- id: shen-hao
+  role: alumni
+  name: { zh: 沈昊, en: Hao Shen }
+  major: { zh: 智能医学工程 · 2021 级, en: Intelligent Medical Engineering · Class of 2025 }
+  period: 2023.09 – 2025.06
+  topics:
+    - { zh: 大语言模型生成糖尿病电子病历中的偏见分析与改进, en: Analyzing and mitigating bias in LLM-generated diabetes EHRs }
+- id: li-jinpeng
+  role: alumni
+  name: { zh: 李锦鹏, en: Jinpeng Li }
+  major: { zh: 智能医学工程 · 2021 级, en: Intelligent Medical Engineering · Class of 2025 }
+  period: 2023.09 – 2025.06
+  topics:
+    - { zh: 基于大模型问答系统辅助临床诊断推理, en: LLM-based question answering to support clinical diagnostic reasoning }
+    - { zh: 毕业设计学生论文审查系统研发, en: Developing a review system for students' graduation theses }
+- id: xu-yifan
+  role: undergrad
+  name: { zh: 徐怡帆, en: Yifan Xu }
+  aliases: [Y Xu]
+  # TODO: 年级根据学号推断，请确认
+  major: { zh: 智能医学工程 · 2023 级, en: Intelligent Medical Engineering · Class of 2027 }
+  period: 2023.11 –
+  now: { zh: 保研至 四川大学 · 计算机科学与技术（直博）, en: "Direct-entry PhD, Computer Science and Technology, Sichuan University" }
+  topics:
+    - { zh: 大语言模型辅助的线上自闭症社区文本标注与分析, en: LLM-assisted annotation and analysis of online autism communities }
+    - { zh: 大语言模型生成合成电子病历的质量与偏差评估, en: Quality and bias evaluation of LLM-generated synthetic EHRs }
+  achievements:
+    - { type: paper, pub: jmir-2026-autism-llm, zh: 第一作者, en: First author }
+    - { type: paper, pub: jmir-2025-llm-ehr, zh: 第四作者, en: Fourth author }
+    - { type: award, zh: 全国数字健康创新应用大赛 · 国家级二等奖, en: "National Digital Health Innovation Competition · National 2nd Prize" }
+    - { type: award, zh: 全国大学生“区块链+”应用大赛 · 国家级三等奖, en: "National Blockchain+ Application Competition · National 3rd Prize" }
+    - { type: award, zh: 第十五届蓝桥杯 · 省级二等奖, en: "15th Lanqiao Cup · Provincial 2nd Prize" }
+- id: zhou-zixuan
+  role: alumni
+  name: { zh: 周子轩, en: Zixuan Zhou }
+  major: { zh: 智能医学工程 · 2022 级, en: Intelligent Medical Engineering · Class of 2026 }
+  period: 2024.09 – 2026.07
+  topics:
+    - { zh: 大模型虚拟患者系统的数据库与后端建设, en: Database and backend of the LLM-based virtual patient system }
+    - { zh: 社交媒体青少年生殖健康视频的互动与情感分析, en: Engagement and sentiment analysis of adolescent reproductive health videos on social media }
+    - { zh: 医学生成式 AI 的人口学偏见与公平性审计, en: Auditing demographic bias and fairness in medical generative AI }
+    - { zh: 基于大模型 Text-to-SQL 的智慧楼宇数据问答, en: LLM-based Text-to-SQL question answering for smart building data }
+  achievements:
+    - { type: paper, zh: "AAAI 2026 · 第二作者 · Language as a Latent Control: Cross-Lingual Bias Inversion and Modality Gaps in Medical Text-to-Image Generation", en: "AAAI 2026 · second author · Language as a Latent Control: Cross-Lingual Bias Inversion and Modality Gaps in Medical Text-to-Image Generation" }
+    - { type: award, zh: 第三届全国大学生人工智能科技竞赛 · 一等奖, en: "3rd National College Students' AI Science and Technology Competition · First Prize" }
+    - { type: award, zh: 第四届全国大学生人工智能知识竞赛 · 一等奖, en: "4th National College Students' AI Knowledge Competition · First Prize" }
+    - { type: award, zh: 2024 全国大学生数据分析大赛 · 二等奖, en: "2024 National College Students' Data Analysis Competition · Second Prize" }
+  now: { zh: 南洋理工大学（新加坡）· 硕士研究生, en: "Master's student, Nanyang Technological University, Singapore" }
+- id: du-weijie
+  role: alumni
+  name: { zh: 都炜杰, en: Weijie Du }
+  major: { zh: 智能医学工程 · 2022 级, en: Intelligent Medical Engineering · Class of 2026 }
+  period: 2024.09 – 2026.07
+  topics:
+    - { zh: 大模型虚拟患者系统研发, en: Developing the LLM-based virtual patient system }
+    - { zh: 基于大语言模型的宫内节育器不良事件关联性评价分类, en: LLM-based causality assessment of intrauterine device adverse events }
+  now: { zh: 保研至 四川大学, en: "Graduate study, Sichuan University" }
+
+# ---------------------------------------------------------------------------
+# 本科生 / 毕业成员模板（复制一段、去掉行首的 # 并修改即可）
+# 本科生不放照片和联系方式，显示为文字卡片。公开姓名前请先征得本人同意。
+#
+# 在读本科生：
+# - id: zhang-san
+#   role: undergrad
+#   name: { zh: 张三, en: San Zhang }
+#   major: { zh: 临床医学 · 2023 级, en: Clinical Medicine · Class of 2028 }
+#   period: 2025.03 –
+#   topics:              # 参与的课题，一个或多个
+#     - { zh: 医学大模型评估, en: Evaluating medical LLMs }
+#     - { zh: 电子病历信息抽取, en: EHR information extraction }
+#   achievements:        # 可选，有几条写几条；没有成果就整段不写，卡片只显示课题
+#     - { type: paper, pub: jmir-2025-llm-ehr, zh: 第四作者, en: Fourth author }
+#     - { type: project, zh: 大创国家级立项, en: National Innovation Project }
+#     - { type: award, zh: 挑战杯江苏省赛二等奖, en: Challenge Cup Jiangsu 2nd Prize, link: https://... }
+#
+# 成果类型 type：paper（论文）/ award（获奖）/ project（项目）/ other（其他）
+# 论文写 pub: 论文 id（见 publications.yaml 每篇的 id），会自动显示论文全称、期刊、年份，并链接到原文；
+#   zh / en 写作者位次。若论文尚未收录进 publications.yaml，也可以不写 pub，直接用 zh / en 描述
+# 其他成果可选 link，附上获奖公示、项目页面等链接
+#
+# 毕业成员：把 role 改成 alumni，补上在组时间和去向（去向可选，不想公开就不写）
+# - id: li-si
+#   role: alumni
+#   name: { zh: 李四, en: Si Li }
+#   major: { zh: 生物医学工程 · 2021 级, en: Biomedical Engineering · Class of 2025 }
+#   period: 2023.09 – 2025.06
+#   topics:
+#     - { zh: 电子病历信息抽取, en: Clinical information extraction }
+#   achievements:
+#     - { type: paper, pub: arxiv-2022-event-extraction, zh: 第二作者, en: Second author }
+#   now: { zh: 保研至 某某大学 · 生物医学工程, en: "Graduate study, Example University" }

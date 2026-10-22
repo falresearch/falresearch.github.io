@@ -1,0 +1,188 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import { getLang, langPaths, loc, localizePath, useT } from '../../i18n';
+import { site } from '../../data/site';
+import { getCollabSections, getJoinSections, getResearch } from '../../lib/data';
+
+export const getStaticPaths = langPaths;
+
+const lang = getLang(Astro.params.lang);
+const t = useT(lang);
+const [collab, join, research] = await Promise.all([getCollabSections(), getJoinSections(), getResearch()]);
+const points = (p: { zh: string[]; en?: string[] }) => (lang === 'en' && p.en ? p.en : p.zh);
+const mail = (subject: string) => `mailto:${site.contact.email}?subject=${encodeURIComponent(subject)}`;
+
+// 加入流程三步
+const steps =
+  lang === 'zh'
+    ? [
+        { title: '发送邮件', body: `写信至 ${site.contact.email}，附上简历或简单的自我介绍，以及你感兴趣的研究方向。` },
+        { title: '面谈交流', body: '我们会尽快回复，约时间聊一聊你的兴趣、专业背景和可投入的时间。' },
+        { title: '从小任务开始', body: '先从一个小的研究任务入手，熟悉课题组的工作方式，再逐步参与正式课题。' },
+      ]
+    : [
+        { title: 'Send an email', body: `Write to ${site.contact.email} with your CV or a short introduction and the research directions you are interested in.` },
+        { title: 'Have a chat', body: 'We will reply soon and set up a meeting to talk about your interests, background and available time.' },
+        { title: 'Start small', body: 'Begin with a small research task to get familiar with how the lab works, then gradually join a full project.' },
+      ];
+---
+
+<BaseLayout lang={lang} title={t('nav.contact')}>
+  <PageHero index="05" label="Contact" title={t('nav.contact')} lead={t('contact.lead')}>
+    <div class="hero-actions">
+      <a href={`mailto:${site.contact.email}`} class="btn btn--primary cta">{site.contact.email} <span class="arrow">→</span></a>
+      <a href="#collab" class="btn btn--ghost">01 · {t('contact.collab')} ↓</a>
+      <a href="#join" class="btn btn--ghost">02 · {t('contact.join')} ↓</a>
+    </div>
+  </PageHero>
+
+  <!-- ========== 科研合作 ========== -->
+  <section id="collab" class="section anchor">
+    <div class="container">
+      <SectionHead index="01" label="Collaboration" title={t('contact.collab')} />
+      <p class="lead part-lead reveal">{t('contact.collab.lead')}</p>
+      <div class="jgrid">
+        {collab.map((s) => (
+          <article class="jcard reveal">
+            <span class="mono jcard__idx">{String(s.data.order).padStart(2, '0')}</span>
+            <h3 class="h3">{loc(s.data.title, lang)}</h3>
+            <ul class="jcard__list">{points(s.data.points).map((p) => <li>{p}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+
+      <h3 class="mono sub-h">{t('contact.collab.areas')}</h3>
+      <ol class="areas reveal">
+        {research.map((r) => (
+          <li>
+            <a href={localizePath(lang, '/research')}>
+              <span class="mono areas__num">{String(r.data.order).padStart(2, '0')}</span>
+              <span class="areas__title">{loc(r.data.title, lang)}</span>
+              <span class="areas__go" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <a href={mail(lang === 'zh' ? '科研合作' : 'Research collaboration')} class="contact reveal">
+        <span class="mono contact__label">{t('contact.collab')} · {t('join.email')}</span>
+        <span class="contact__value">{site.contact.email}</span>
+        <span class="contact__note">{t('contact.collab.note')}</span>
+        <span class="contact__go" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========== 课题组招募 ========== -->
+  <section id="join" class="section paper2 anchor">
+    <div class="container">
+      <SectionHead index="02" label="Join the lab" title={t('contact.join')} />
+      <p class="lead part-lead reveal">{t('home.join.body')}</p>
+      <div class="jgrid">
+        {join.map((s) => (
+          <article class="jcard reveal">
+            <span class="mono jcard__idx">{String(s.data.order).padStart(2, '0')}</span>
+            <h3 class="h3">{loc(s.data.title, lang)}</h3>
+            <ul class="jcard__list">{points(s.data.points).map((p) => <li>{p}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+
+      <h3 class="mono sub-h">{t('join.how')}</h3>
+      <ol class="steps reveal">
+        {steps.map((s, i) => (
+          <li class="step">
+            <span class="mono step__idx">STEP {String(i + 1).padStart(2, '0')}</span>
+            <h3 class="step__title">{s.title}</h3>
+            <p class="step__body">{s.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cta { margin-top: 36px; text-transform: none; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .hero-actions .cta { margin-top: 0; }
+  .anchor { scroll-margin-top: var(--header-h); }
+  .part-lead { margin: -24px 0 32px; }
+  .sub-h { margin: 48px 0 16px; font-size: 12px; font-weight: 400; color: var(--muted); letter-spacing: 0.12em; }
+
+  /* 可合作的研究方向 */
+  .areas { list-style: none; margin: 0 0 32px; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .areas a { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: baseline; height: 100%; padding: 20px; background: var(--card); transition: background 0.2s; }
+  .areas__num { font-size: 11px; color: var(--accent-ink); }
+  .areas__title { font-weight: 600; line-height: 1.4; }
+  .areas__go { color: var(--muted); transition: transform 0.2s, color 0.2s; }
+  .areas a:hover { background: #fbfbf8; }
+  .areas a:hover .areas__go { color: var(--accent-ink); transform: translate(2px, -2px); }
+
+  /* 四个介绍板块 */
+  .jgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .jcard { display: grid; align-content: start; gap: 16px; padding: 32px; background: var(--card); }
+  .jcard__idx { color: var(--accent-ink); font-size: 12px; }
+  .jcard__list { display: grid; gap: 10px; }
+  .jcard__list li { position: relative; padding-left: 22px; color: var(--muted); line-height: 1.7; }
+  .jcard__list li::before { content: ''; position: absolute; left: 0; top: 0.8em; width: 10px; height: 1px; background: var(--text); }
+
+  /* 加入流程 */
+  .paper2 { background: var(--paper-2); }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: step; }
+  .step { position: relative; display: grid; align-content: start; gap: 12px; padding: 28px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+  .step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--ink);
+    font-size: 13px;
+  }
+  .step__idx { font-size: 11px; color: var(--muted); }
+  .step__title { font-size: 20px; letter-spacing: -0.01em; }
+  .step__body { color: var(--muted); font-size: 15px; line-height: 1.7; word-break: break-word; }
+
+  /* 联系方式 */
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px 24px;
+    align-items: center;
+    padding: 36px 40px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color 0.3s;
+  }
+  .contact > :not(.contact__go) { grid-column: 1; }
+  .contact__label { color: var(--muted); }
+  .contact__value { font-size: clamp(24px, 3.4vw, 40px); letter-spacing: -0.02em; word-break: break-all; transition: color 0.3s; }
+  .contact__note { color: var(--muted); font-size: 15px; }
+  .contact__go { grid-column: 2; grid-row: 1 / 4; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--ink); font-size: 22px; transition: transform 0.3s; }
+  .contact:hover { border-color: var(--text); }
+  .contact:hover .contact__value { color: var(--accent-ink); }
+  .contact:hover .contact__go { transform: translateX(4px); }
+
+  @media (max-width: 1000px) {
+    .areas { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 860px) {
+    .jgrid { grid-template-columns: 1fr; }
+    .areas { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .step:not(:last-child)::after { content: '↓'; right: auto; left: 28px; top: auto; bottom: -14px; transform: none; }
+    .contact { padding: 28px 24px; }
+    .contact__go { width: 44px; height: 44px; }
+  }
+</style>

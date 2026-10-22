@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { localizePath } from '../i18n';
+---
+
+<BaseLayout lang="zh" title="404">
+  <section class="nf dark grid-bg">
+    <div class="container nf__inner">
+      <span class="mono nf__code">ERROR / 404</span>
+      <h1 class="display">页面不存在<br /><span class="nf__en">Page not found</span></h1>
+      <div class="nf__cta">
+        <a href={localizePath('zh', '/')} class="btn btn--primary">返回首页 <span class="arrow">→</span></a>
+        <a href={localizePath('en', '/')} class="btn btn--ghost">Back to home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf__inner { min-height: 70vh; display: grid; align-content: center; gap: 28px; padding-block: 80px; }
+  .nf__code { color: var(--accent); }
+  .nf__en { color: var(--ink-muted); }
+  .nf__cta { display: flex; gap: 12px; flex-wrap: wrap; }
+</style>

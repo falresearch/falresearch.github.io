@@ -1,0 +1,133 @@
+# 论文列表（整理自 Google Scholar，2026-10，仅收录 2020 年及以后）。
+# type 可选：journal / conference / preprint
+# 作者名与 people.yaml 中的 name / aliases 一致时会自动加粗（同名但非本组成员可用 notMembers 排除）；作者较多时 Scholar 只显示前若干位，这里以 "et al." 表示
+# tags 为论文的主题标签（目前仅作整理用）；研究方向下显示哪些论文，在 research.yaml 的 pubs 中指定
+
+# ---------- 2026 ----------
+- id: jmir-2026-autism-llm
+  title: "Large Language Model–Assisted Annotation Framework for Cross-Platform Analysis of Online Autism Communities: Implications for Parent Education and Digital Support"
+  authors: Y Xu, J Ma, Y Hu, Y Liu, Y Chen, W Feng, C Zhang, L Zhang, X Zhang, et al.
+  venue: "Journal of Medical Internet Research, 28, e85290"
+  year: 2026
+  type: journal
+  tags: [LLM]
+  links: { doi: "https://doi.org/10.2196/85290" }
+
+# ---------- 2025 ----------
+- id: iotj-2025-fl-semcom
+  title: Federated-Learning-Enabled Cross-Modal Semantic Communication for 6G
+  authors: R Huang, C Qiu, M Chen, C Zhang, H Zhu
+  venue: "IEEE Internet of Things Journal, 12(20), 41608–41624"
+  year: 2025
+  type: journal
+  tags: [Federated Learning, 6G]
+- id: jmir-2025-llm-ehr
+  title: "Evaluation and Bias Analysis of Large Language Models in Generating Synthetic Electronic Health Records: Comparative Study"
+  authors: R Huang, H Wu, Y Yuan, Y Xu, H Qian, C Zhang, X Wei, S Lu, X Zhang, et al.
+  venue: "Journal of Medical Internet Research, 27, e65317"
+  year: 2025
+  type: journal
+  tags: [LLM, EHR, Synthetic Data, Bias]
+  links: { doi: "https://doi.org/10.2196/65317" }
+
+# ---------- 2024 ----------
+- id: jmir-2024-hypertension
+  title: "Development and Validation of a Nomogram-Based Model to Predict Primary Hypertension Within the Next Year in Children and Adolescents: Retrospective Cohort Study"
+  authors: C Qin, L Peng, Y Liu, X Zhang, S Miao, Z Wei, W Feng, H Zhang, C Wan, et al.
+  venue: "Journal of Medical Internet Research, 26, e58686"
+  year: 2024
+  type: journal
+  tags: [Clinical Prediction]
+  links: { doi: "https://doi.org/10.2196/58686" }
+- id: iwrfat-2024-traffic
+  title: "Learning or Non-Learning: Effective Access Traffic Prediction in Random Access"
+  authors: C Zhang, C Zhang, W Xia, R Huang, H Zhu, Y Huang
+  venue: 2024 IEEE International Workshop on Radio Frequency and Antenna Technologies
+  year: 2024
+  type: conference
+  tags: [Wireless]
+- id: dcn-2024-diabetes-5g
+  title: An Artificial Intelligence Diabetes Management Architecture Based on 5G
+  authors: R Huang, W Feng, S Lu, C Zhang, Y Liu
+  venue: "Digital Communications and Networks, 10(1), 75–82"
+  year: 2024
+  type: journal
+  tags: [5G, Diabetes, Edge Computing]
+- id: bmc-2024-ontology
+  title: Development and Application of Chinese Medical Ontology for Diabetes Mellitus
+  authors: J Hu, Z Huang, X Ge, Y Shen, Y Xu, Z Zhang, G Zhou, J Wang, S Lu, Y Yu, et al.
+  notMembers: [Y Xu]   # 此处的 Y Xu 不是课题组的徐怡帆
+  venue: "BMC Medical Informatics and Decision Making, 24(1), 18"
+  year: 2024
+  type: journal
+  tags: [Ontology, Clinical NLP, Diabetes]
+- id: tiis-2024-fl-covid
+  title: Edge Computing Model Based on Federated Learning for COVID-19 Clinical Outcome Prediction in the 5G Era
+  authors: R Huang, Z Wei, W Feng, Y Li, C Zhang, C Qiu, M Chen
+  venue: "KSII Transactions on Internet and Information Systems, 18(4), 826–842"
+  year: 2024
+  type: journal
+  tags: [Federated Learning, Edge Computing, COVID-19, Clinical Prediction]
+
+# ---------- 2023 ----------
+- id: commlett-2023-m2m
+  title: Access Delay Optimization of Double-Contention Random Access Scheme in Machine-to-Machine Communications
+  authors: C Zhang, X Sun, W Xia, R Huang, M Zhou, H Zhu
+  venue: "IEEE Communications Letters, 27(8), 2088–2092"
+  year: 2023
+  type: journal
+  tags: [Wireless]
+- id: iccw-2023-healthcare-access
+  title: Hybrid Channel Access Towards Real-Time Applications in Healthcare
+  authors: W Xia, C Zhang, X Sun, R Huang, H Zhu
+  venue: 2023 IEEE International Conference on Communications Workshops (ICC Workshops)
+  year: 2023
+  type: conference
+  tags: [Wireless, Edge Computing]
+
+# ---------- 2022 ----------
+- id: wcsp-2022-edge-risk
+  title: An Edge Based Framework for Risk Assessment of Communicable Disease
+  authors: R Huang, Y Li, W Feng, X Zhang, T Shan, Y Liu
+  venue: 2022 14th International Conference on Wireless Communications and Signal Processing (WCSP)
+  year: 2022
+  type: conference
+  tags: [Edge Computing, Clinical Prediction]
+- id: vtc-2022-acb
+  title: Distributive ACB Factor Estimation for Delay-Sensitive Applications in Non-Terrestrial Networks
+  authors: C Zhang, X Sun, W Xia, R Huang, H Zhu
+  venue: 2022 IEEE 96th Vehicular Technology Conference (VTC2022-Fall)
+  year: 2022
+  type: conference
+  tags: [Wireless]
+- id: fpsyt-2022-depression
+  title: "Association Between Depressive Symptoms and Diagnosis of Diabetes and Its Complications: A Network Analysis in Electronic Health Records"
+  authors: C Wan, W Feng, R Ma, H Ma, J Wang, R Huang, X Zhang, M Jing, H Yang, et al.
+  venue: "Frontiers in Psychiatry, 13, 966758"
+  year: 2022
+  type: journal
+  tags: [EHR, Diabetes]
+- id: arxiv-2022-event-extraction
+  title: End-to-End Clinical Event Extraction from Chinese Electronic Health Record
+  authors: W Feng, R Huang, Y Yu, H Sun, Y Liu
+  venue: "arXiv:2208.09354"
+  year: 2022
+  type: preprint
+  tags: [EHR, Clinical NLP]
+  links: { pdf: "https://arxiv.org/abs/2208.09354" }
+- id: bmjopen-2022-t2d
+  title: "Validation of Type 2 Diabetes Subgroups by Simple Clinical Parameters: A Retrospective Cohort Study of NHANES Data from 1999 to 2014"
+  authors: J Xie, H Shao, T Shan, S Jing, Y Shi, J Wang, J Hu, Y Li, R Huang, N Liu, et al.
+  venue: "BMJ Open, 12(3), e055647"
+  year: 2022
+  type: journal
+  tags: [Clinical Prediction, Diabetes]
+
+# ---------- 2020 ----------
+- id: atm-2020-covid
+  title: "A Predictive Model for Respiratory Distress in Patients with COVID-19: A Retrospective Study"
+  authors: X Zhang, W Wang, C Wan, G Cheng, Y Yin, K Cao, X Zhang, Z Wang, et al.
+  venue: "Annals of Translational Medicine, 8(23), 1585"
+  year: 2020
+  type: journal
+  tags: [Clinical Prediction, COVID-19]

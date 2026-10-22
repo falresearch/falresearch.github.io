@@ -1,0 +1,193 @@
+---
+// 研究方向线稿示意图 —— 细线条 + 等宽小标注，每个方向画出它“在做什么”
+// animated=true 时（首屏轮播中使用），外层加上 is-on 类即播放：先逐笔绘出，再进入循环动效
+//   d = 描线绘出   f = 淡入   p = 弹出   g = 自下而上生长   gx = 自左向右生长
+//   flow = 虚线流动   pulse = 呼吸   wave = 声纹跳动   rock = 天平摆动
+// --d 为该元素的开始延迟（秒）
+interface Props {
+  theme: string;
+  animated?: boolean;
+}
+const { theme, animated = false } = Astro.props;
+
+// 电子病历：历史指标曲线 + 预测段与置信区间
+const hist = [[250, 168], [280, 160], [310, 166], [340, 150], [370, 154], [400, 138]];
+const pred = [[400, 138], [430, 124], [460, 112], [490, 92]];
+const band = 'M400 138 L430 112 L460 92 L490 64 L490 120 L460 132 L430 136 L400 138 Z';
+const pts = (a: number[][]) => a.map((p) => p.join(',')).join(' ');
+const d = (s: number) => `--d:${s}s`;
+---
+
+<svg class:list={['art', { 'art--live': animated }]} viewBox="0 0 560 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  {theme === 'ehr-prediction' && (
+    <g>
+      <!-- 病历卡 -->
+      <rect x="48" y="36" width="150" height="172" rx="6" stroke-opacity="0.9" pathLength="1" class="d" style={d(0)} />
+      <path d="M48 66 H198" stroke-opacity="0.4" pathLength="1" class="d" style={d(0.3)} />
+      <path d="M64 51 h12 M70 45 v12" class="acc-stroke p" stroke-width="2.5" style={d(0.5)} />
+      <text x="86" y="55" class="lbl f" style={d(0.5)}>EHR · #00281</text>
+      {[84, 100, 116, 132].map((y, i) => <path d={`M64 ${y} H${i % 2 ? 150 : 182}`} stroke-opacity="0.45" pathLength="1" class="d" style={d(0.6 + i * 0.12)} />)}
+      {[156, 176].map((y, i) => <g class="f" style={d(1.1 + i * 0.1)}><rect x="64" y={y - 7} width="10" height="10" rx="2" stroke-opacity="0.6" /><path d={`M84 ${y - 2} H170`} stroke-opacity="0.45" /></g>)}
+      <path d="M66 151 l3 3 l5 -6" class="acc-stroke d" pathLength="1" style={d(1.3)} />
+      <!-- 连接箭头 -->
+      <path d="M210 122 H232 M226 116 l6 6 l-6 6" stroke-opacity="0.7" class="f" style={d(1.5)} />
+      <!-- 坐标轴 -->
+      <path d="M248 40 V196 H520" stroke-opacity="0.5" pathLength="1" class="d" style={d(1.6)} />
+      {[80, 120, 160].map((y) => <path d={`M248 ${y} H520`} stroke-opacity="0.1" class="f" style={d(1.9)} />)}
+      <path d="M400 44 V196" stroke-dasharray="3 5" stroke-opacity="0.5" class="f" style={d(2.0)} />
+      <text x="406" y="54" class="lbl f" style={d(2.0)}>NOW</text>
+      <path d={band} class="acc-fill f" stroke="none" style={d(3.1)} />
+      <polyline points={pts(hist)} pathLength="1" class="d d--slow" style={d(2.1)} />
+      {hist.map(([x, y], i) => <circle cx={x} cy={y} r="3" fill="currentColor" stroke="none" class="p" style={d(2.1 + i * 0.16)} />)}
+      <polyline points={pts(pred)} class="acc-stroke f flow" stroke-dasharray="5 5" stroke-width="2" style={d(3.1)} />
+      <circle cx="490" cy="92" r="6" class="acc-dot p" stroke="none" style={d(3.6)} />
+      <circle cx="490" cy="92" r="13" class="acc-stroke pulse" stroke-opacity="0.6" style={d(3.7)} />
+      <text x="440" y="214" class="lbl f" style={d(3.8)}>RISK ↑ 0.82</text>
+      <text x="252" y="214" class="lbl f" style={d(2.0)}>t −12m</text>
+    </g>
+  )}
+
+  {theme === 'virtual-patient' && (
+    <g>
+      <!-- 虚拟患者半身像 -->
+      <circle cx="140" cy="92" r="34" pathLength="1" class="d" style={d(0)} />
+      <path d="M78 206 C82 160 104 140 140 140 C176 140 198 160 202 206" pathLength="1" class="d" style={d(0.3)} />
+      <circle cx="126" cy="88" r="2.5" fill="currentColor" stroke="none" class="p" style={d(0.7)} />
+      <circle cx="154" cy="88" r="2.5" fill="currentColor" stroke="none" class="p" style={d(0.75)} />
+      <path d="M130 110 H150" stroke-opacity="0.7" class="f" style={d(0.8)} />
+      <g class="f" style={d(0.9)}>
+        <rect x="94" y="30" width="92" height="20" rx="10" stroke-opacity="0.35" />
+        <text x="106" y="44" class="lbl">CASE F32.1</text>
+      </g>
+      <!-- 患者语音气泡 -->
+      <path d="M222 70 h170 a12 12 0 0 1 12 12 v36 a12 12 0 0 1 -12 12 h-158 l-14 12 v-12 a12 12 0 0 1 0 0 v-48 a12 12 0 0 1 12 -12 z" pathLength="1" class="d" style={d(1.1)} />
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((i) => {
+        const h = 6 + Math.abs(Math.sin(i * 1.3)) * 26;
+        return <path d={`M${244 + i * 7.5} ${100 - h / 2} v${h}`} class:list={['wave', { 'acc-stroke': i > 6 && i < 11 }]} stroke-width="2.5" style={`${d(1.5 + i * 0.03)};--w:${(0.5 + (i % 5) * 0.12).toFixed(2)}s`} />;
+      })}
+      <!-- 医生提问气泡 -->
+      <g class="f" style={d(1.9)}>
+        <path d="M420 150 h90 a10 10 0 0 1 10 10 v26 a10 10 0 0 1 -10 10 h-90 a10 10 0 0 1 -10 -10 v-26 a10 10 0 0 1 10 -10 z" stroke-opacity="0.6" />
+        <path d="M510 196 l8 10 v-10" stroke-opacity="0.6" />
+        <text x="428" y="178" class="lbl">问诊 · Q07</text>
+      </g>
+      <!-- 评估 -->
+      <text x="226" y="160" class="lbl f" style={d(2.2)}>ROLE CONSISTENCY</text>
+      <path d="M226 172 H392" stroke-opacity="0.2" stroke-width="4" class="f" style={d(2.2)} />
+      <path d="M226 172 H360" class="acc-stroke gx" stroke-width="4" style={d(2.4)} />
+      <text x="226" y="198" class="lbl f" style={d(2.8)}>HALLUCINATION ↓</text>
+    </g>
+  )}
+
+  {theme === 'health-qa' && (
+    <g>
+      <!-- 口语化提问碎片 -->
+      {[[40, 40, 92], [62, 74, 70], [34, 108, 104], [58, 142, 80]].map(([x, y, w], i) => (
+        <g stroke-opacity={0.25 + i * 0.12} class="p" style={d(i * 0.15)}>
+          <rect x={x} y={y} width={w} height="22" rx="11" />
+          <path d={`M${x + 12} ${y + 11} H${x + w - 14}`} stroke-dasharray="2 4" />
+        </g>
+      ))}
+      <text x="40" y="196" class="lbl f" style={d(0.6)}>REAL-WORLD QUESTIONS</text>
+      <!-- 汇入模型 -->
+      <path d="M160 52 C200 52 200 112 228 116 M150 85 C196 85 200 116 228 118 M152 119 H228 M154 153 C196 153 200 122 228 120" stroke-opacity="0.35" pathLength="1" class="d" style={d(0.8)} />
+      <path d="M160 52 C200 52 200 112 228 116 M150 85 C196 85 200 116 228 118 M152 119 H228 M154 153 C196 153 200 122 228 120" class="acc-stroke flow flow--fast" stroke-dasharray="3 14" stroke-opacity="0.8" style={d(1.6)} />
+      <rect x="232" y="78" width="84" height="84" rx="10" pathLength="1" class="d" style={d(1.2)} />
+      {[0, 1, 2].map((r) => [0, 1, 2].map((c) => <rect x={248 + c * 20} y={94 + r * 20} width="12" height="12" rx="2" class:list={['p', { 'acc-fill-solid pulse': r === 1 && c === 1 }]} stroke-opacity="0.6" style={d(1.4 + (r * 3 + c) * 0.05)} />))}
+      <text x="244" y="182" class="lbl f" style={d(1.6)}>LLM · LoRA</text>
+      <path d="M324 120 H350 M344 114 l6 6 l-6 6" stroke-opacity="0.7" class="f" style={d(1.9)} />
+      <!-- 结构化回答 -->
+      <rect x="360" y="44" width="160" height="152" rx="8" pathLength="1" class="d" style={d(2.0)} />
+      <text x="376" y="68" class="lbl f" style={d(2.2)}>A.</text>
+      {[84, 100, 116, 132].map((y, i) => <path d={`M376 ${y} H${[500, 486, 504, 470][i]}`} stroke-opacity="0.5" pathLength="1" class="d" style={d(2.3 + i * 0.15)} />)}
+      <path d="M440 152 l18 -6 l18 6 v14 c0 10 -8 16 -18 20 c-10 -4 -18 -10 -18 -20 z" class="acc-stroke d" stroke-width="2" pathLength="1" style={d(3.0)} />
+      <path d="M450 166 l6 6 l10 -12" class="acc-stroke d" stroke-width="2" pathLength="1" style={d(3.5)} />
+      <text x="376" y="172" class="lbl f" style={d(3.5)}>SAFE</text>
+    </g>
+  )}
+
+  {theme === 'llm-bias' && (
+    <g>
+      <!-- 天平 -->
+      <path d="M150 50 V200 M110 200 H190" pathLength="1" class="d" style={d(0)} />
+      <g class="f" style={d(0.5)}>
+        <g class="rock">
+          <path d="M70 66 L230 42" />
+          <path d="M70 66 L48 120 M70 66 L92 120 M38 120 H102 a32 14 0 0 1 -64 0 z" />
+          <path d="M230 42 L208 96 M230 42 L252 96 M198 96 H262 a32 14 0 0 1 -64 0 z" />
+        </g>
+      </g>
+      <circle cx="150" cy="50" r="5" class="acc-dot p" stroke="none" style={d(0.6)} />
+      <text x="40" y="150" class="lbl f" style={d(0.9)}>GROUP A</text>
+      <text x="200" y="126" class="lbl f" style={d(0.9)}>GROUP B</text>
+      <!-- 分组柱状对比 -->
+      <path d="M300 196 H524 M300 40 V196" stroke-opacity="0.5" pathLength="1" class="d" style={d(1.0)} />
+      <path d="M300 96 H524" stroke-dasharray="4 5" stroke-opacity="0.5" class="f flow" style={d(1.3)} />
+      <text x="470" y="90" class="lbl f" style={d(1.3)}>PARITY</text>
+      {[0, 1, 2, 3].map((i) => {
+        const a = [100, 80, 112, 92][i];
+        const b = [68, 92, 54, 86][i];
+        const x = 320 + i * 52;
+        return (
+          <g>
+            <rect x={x} y={196 - a} width="16" height={a} stroke-opacity="0.7" class="g" style={d(1.4 + i * 0.25)} />
+            <rect x={x + 20} y={196 - b} width="16" height={b} class:list={['g', { 'acc-fill-solid': Math.abs(a - b) > 30 }]} stroke-opacity="0.7" style={d(1.5 + i * 0.25)} />
+          </g>
+        );
+      })}
+      <text x="304" y="216" class="lbl f" style={d(2.4)}>M1   M2   M3   M4</text>
+    </g>
+  )}
+</svg>
+
+<style>
+  .art { width: 100%; height: 100%; color: var(--ink-text); }
+  .art :global(.lbl) { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; fill: currentColor; fill-opacity: 0.55; stroke: none; }
+  .art :global(.acc-stroke) { stroke: var(--accent); }
+  .art :global(.acc-dot) { fill: var(--accent); }
+  .art :global(.acc-fill) { fill: var(--accent); fill-opacity: 0.16; }
+  .art :global(.acc-fill-solid) { fill: var(--accent); stroke: var(--accent); }
+
+  /* —— 动画（仅在首屏轮播中启用）—— */
+  .art--live :global(.p), .art--live :global(.g), .art--live :global(.gx), .art--live :global(.rock), .art--live :global(.pulse), .art--live :global(.wave) { transform-box: fill-box; }
+  .art--live :global(.p), .art--live :global(.pulse) { transform-origin: center; }
+  .art--live :global(.g) { transform-origin: bottom; }
+  .art--live :global(.gx) { transform-origin: left; }
+  .art--live :global(.wave) { transform-origin: center; }
+  .art--live :global(.rock) { transform-box: view-box; transform-origin: 150px 50px; }
+
+  :global(.is-on) > .art--live :global(.d) { stroke-dasharray: 1; animation: la-draw 0.9s cubic-bezier(0.6, 0, 0.3, 1) var(--d, 0s) both; }
+  :global(.is-on) > .art--live :global(.d--slow) { animation-duration: 1.2s; }
+  :global(.is-on) > .art--live :global(.f) { animation: la-fade 0.6s ease var(--d, 0s) both; }
+  :global(.is-on) > .art--live :global(.p) { animation: la-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) var(--d, 0s) both; }
+  :global(.is-on) > .art--live :global(.g) { animation: la-grow-y 0.7s cubic-bezier(0.3, 1.2, 0.5, 1) var(--d, 0s) both; }
+  :global(.is-on) > .art--live :global(.gx) { animation: la-grow-x 1s cubic-bezier(0.6, 0, 0.3, 1) var(--d, 0s) both; }
+  :global(.is-on) > .art--live :global(.flow) { animation: la-fade 0.6s ease var(--d, 0s) both, la-flow 1.2s linear var(--d, 0s) infinite; }
+  :global(.is-on) > .art--live :global(.flow--fast) { animation: la-fade 0.6s ease var(--d, 0s) both, la-flow-fast 1.4s linear var(--d, 0s) infinite; }
+  :global(.is-on) > .art--live :global(.pulse) { animation: la-pulse 1.4s ease-in-out var(--d, 0s) infinite; }
+  :global(.is-on) > .art--live :global(.p.pulse) { animation: la-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) var(--d, 0s) both, la-pulse 1.4s ease-in-out calc(var(--d, 0s) + 0.5s) infinite; }
+  :global(.is-on) > .art--live :global(.wave) { animation: la-fade 0.3s ease var(--d, 0s) both, la-wave var(--w, 0.6s) ease-in-out var(--d, 0s) infinite alternate; }
+  :global(.is-on) > .art--live :global(.rock) { animation: la-rock 2.6s ease-in-out 1s infinite alternate; }
+
+  /* 已播放过（外层加 is-done）：跳过逐笔绘出等入场动画，直接显示完成状态，只保留循环动效 */
+  :global(.is-on.is-done) > .art--live :global(:is(.d, .f, .p, .g, .gx)) { animation: none; }
+  :global(.is-on.is-done) > .art--live :global(.flow) { animation: la-flow 1.2s linear infinite; }
+  :global(.is-on.is-done) > .art--live :global(.flow--fast) { animation: la-flow-fast 1.4s linear infinite; }
+  :global(.is-on.is-done) > .art--live :global(.p.pulse) { animation: la-pulse 1.4s ease-in-out infinite; }
+  :global(.is-on.is-done) > .art--live :global(.wave) { animation: la-wave var(--w, 0.6s) ease-in-out infinite alternate; }
+
+  @keyframes la-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes la-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes la-pop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+  @keyframes la-grow-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes la-grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes la-flow { to { stroke-dashoffset: -20; } }
+  @keyframes la-flow-fast { to { stroke-dashoffset: -34; } }
+  @keyframes la-pulse { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.35); opacity: 0.35; } }
+  @keyframes la-wave { from { transform: scaleY(0.35); } to { transform: scaleY(1.15); } }
+  @keyframes la-rock { from { transform: rotate(-6deg); } to { transform: rotate(4deg); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.is-on) > .art--live :global(*) { animation: none !important; }
+  }
+</style>

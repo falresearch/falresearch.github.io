@@ -1,0 +1,14 @@
+---
+// 占位 Logo：一个由节点组成的抽象网络图形。可替换为课题组的正式 Logo（SVG 最佳）
+interface Props { size?: number }
+const { size = 32 } = Astro.props;
+---
+
+<svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect x="0.5" y="0.5" width="31" height="31" rx="3.5" stroke="currentColor" stroke-opacity="0.25" />
+  <path d="M8 22 L14 10 L20 18 L25 8" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+  <circle cx="8" cy="22" r="2" fill="currentColor" />
+  <circle cx="14" cy="10" r="2" fill="currentColor" />
+  <circle cx="20" cy="18" r="2" fill="currentColor" />
+  <circle cx="25" cy="8" r="2.6" fill="#c8f031" />
+</svg>

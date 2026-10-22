@@ -1,0 +1,39 @@
+---
+// 统一的区块标题：左侧编号 + 小标题，右侧大标题与可选的“查看全部”链接
+interface Props {
+  index: string;
+  label: string;
+  title: string;
+  href?: string;
+  linkText?: string;
+}
+const { index, label, title, href, linkText } = Astro.props;
+---
+
+<div class="shead reveal">
+  <div class="shead__meta">
+    <span class="mono shead__idx">[{index}]</span>
+    <span class="eyebrow">{label}</span>
+  </div>
+  <div class="shead__main">
+    <h2 class="h2">{title}</h2>
+    {href && <a href={href} class="link">{linkText} <span aria-hidden="true">→</span></a>}
+  </div>
+</div>
+
+<style>
+  .shead {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 3fr;
+    gap: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    margin-bottom: clamp(36px, 5vw, 64px);
+  }
+  .shead__meta { display: flex; flex-direction: column; gap: 8px; }
+  .shead__idx { color: var(--muted); }
+  .shead__main { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  @media (max-width: 760px) {
+    .shead { grid-template-columns: 1fr; gap: 14px; }
+  }
+</style>

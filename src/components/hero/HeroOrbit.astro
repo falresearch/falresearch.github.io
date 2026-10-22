@@ -1,0 +1,91 @@
+---
+// 首屏总览动画方案 B：以 AI 为核心的研究生态 —— 中心是医疗大模型，内圈文字环是数据来源，
+// 外圈四颗“卫星”是四个研究方向，沿轨道缓慢公转（图标保持正向），信号脉冲从核心发往各方向
+import '../../styles/hero-anim.css';
+import HeroFrame from './HeroFrame.astro';
+import Icon from './flow/Icon.astro';
+import type { Lang } from '../../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const C = 260; // 中心坐标
+const R = 176; // 卫星轨道半径
+const sats = [
+  { kind: 'chart', label: zh ? '诊断与预测' : 'Diagnosis & prediction', a: -90 },
+  { kind: 'patient', label: zh ? '虚拟患者' : 'Virtual patients', a: 0 },
+  { kind: 'qa', label: zh ? '健康问答' : 'Health QA', a: 90 },
+  { kind: 'scale', label: zh ? '可信评估' : 'Trustworthiness', a: 180 },
+] as const;
+const ringText = zh
+  ? '电子病历 · 临床文本 · 医学知识 · 真实世界提问 · 电子病历 · 临床文本 · 医学知识 · 真实世界提问 · '
+  : 'EHR · CLINICAL TEXT · MEDICAL KNOWLEDGE · REAL-WORLD QUESTIONS · EHR · CLINICAL TEXT · MEDICAL KNOWLEDGE · ';
+const d = (s: number) => `--d:${s}s`;
+const pos = (a: number, r = R) => ({ x: C + Math.cos((a * Math.PI) / 180) * r, y: C + Math.sin((a * Math.PI) / 180) * r });
+const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
+---
+
+<HeroFrame tl="FIG.01 · RESEARCH ECOSYSTEM" tr="ORBIT · <b>4</b> DIRECTIONS" bl="CORE · <b>MEDICAL AI</b>">
+  <svg class="ha" viewBox="0 0 520 520" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <defs>
+      <path id="orbit-text" d={`M ${C} ${C} m -98 0 a 98 98 0 1 1 196 0 a 98 98 0 1 1 -196 0`} />
+      <radialGradient id="orbit-glow">
+        <stop offset="0" stop-color="var(--accent)" stop-opacity="0.28" />
+        <stop offset="1" stop-color="var(--accent)" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+
+    <!-- 最外层刻度环（反向缓转） -->
+    <g class="ha-spin-rev ha-fade" style={`--t:120s;transform-origin:${C}px ${C}px;${d(0)}`}>
+      {ticks.map((a) => {
+        const p1 = pos(a, 228), p2 = pos(a, a % 30 === 0 ? 216 : 222);
+        return <path d={`M${p1.x} ${p1.y} L${p2.x} ${p2.y}`} stroke-opacity={a % 30 === 0 ? 0.5 : 0.18} />;
+      })}
+    </g>
+
+    <!-- 卫星轨道 -->
+    <circle cx={C} cy={C} r={R} stroke-opacity="0.22" pathLength="1" class="ha-draw" style={d(0.2)} />
+    <circle cx={C} cy={C} r={R} class="ha-acc ha-flow" stroke-opacity="0.35" stroke-dasharray="2 22" style={d(1)} />
+
+    <!-- 核心光晕与数据文字环 -->
+    <circle cx={C} cy={C} r="130" fill="url(#orbit-glow)" stroke="none" class="ha-fade" style={d(0.4)} />
+    <g class="ha-spin ha-fade" style={`--t:50s;transform-origin:${C}px ${C}px;${d(0.6)}`}>
+      <text class="ha-lbl" style="font-size:9.5px;letter-spacing:0.14em;fill-opacity:0.6">
+        <textPath href="#orbit-text">{ringText}</textPath>
+      </text>
+    </g>
+    <circle cx={C} cy={C} r="80" stroke-opacity="0.25" stroke-dasharray="1 5" class="ha-fade" style={d(0.6)} />
+    <circle cx={C} cy={C} r="56" class="ha-soft ha-pulse" style={d(1)} />
+    <Icon kind="chip" x={C - 38} y={C - 40} size={76} delay={0.5} />
+    <text x={C} y={C + 56} text-anchor="middle" class="ha-cap ha-fade" style={`${d(1)};font-size:11px`}>{zh ? '医疗大模型' : 'Medical LLM'}</text>
+
+    <!-- 公转的卫星组 -->
+    <g class="ha-spin" style={`--t:90s;transform-origin:${C}px ${C}px`}>
+      {sats.map((s, i) => {
+        const p = pos(s.a);
+        const inner = pos(s.a, 84);
+        const spoke = `M${inner.x} ${inner.y} L${pos(s.a, R - 40).x} ${pos(s.a, R - 40).y}`;
+        return (
+          <g>
+            <path d={spoke} stroke-opacity="0.25" stroke-dasharray="2 4" class="ha-fade" style={d(1.4 + i * 0.2)} />
+            <circle r="2.8" class="ha-acc-fill" style="filter:drop-shadow(0 0 4px var(--accent))">
+              <animateMotion dur={`${1.3 + i * 0.15}s`} begin={`${2 + i * 0.35}s`} repeatCount="indefinite" path={spoke} />
+            </circle>
+            <!-- 反向自转，使图标与文字始终保持正向 -->
+            <g class="ha-spin-rev" style={`--t:90s;transform-origin:${p.x}px ${p.y}px`}>
+              <circle cx={p.x} cy={p.y} r="40" fill="var(--ink-2)" stroke-opacity="0.45" class="ha-pop" style={d(1.3 + i * 0.2)} />
+              <circle cx={p.x} cy={p.y} r="46" class="ha-acc ha-fade" stroke-opacity="0.35" stroke-dasharray="3 6" style={d(1.6 + i * 0.2)} />
+              <Icon kind={s.kind} x={p.x - 24} y={p.y - 26} size={48} delay={1.5 + i * 0.2} />
+              <text x={p.x} y={p.y + 62} text-anchor="middle" class="ha-cap ha-fade" style={`${d(1.8 + i * 0.2)};font-size:${zh ? 12 : 10}px`}>{s.label}</text>
+              <text x={p.x} y={p.y - 52} text-anchor="middle" class="ha-lbl ha-fade" style={d(1.8 + i * 0.2)}>0{i + 1}</text>
+            </g>
+          </g>
+        );
+      })}
+    </g>
+  </svg>
+</HeroFrame>
+
+<style>
+  svg.ha { position: absolute; inset: 6%; width: 88%; height: 88%; }
+</style>

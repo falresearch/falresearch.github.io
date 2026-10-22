@@ -1,0 +1,78 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { type Lang, useT } from '../i18n';
+import { getMemberNames, highlightAuthors } from '../lib/data';
+
+interface Props {
+  pub: CollectionEntry<'publications'>;
+  lang: Lang;
+  index?: number;
+  /** 论文页已按年份分组时可关闭左侧年份列 */
+  showYear?: boolean;
+}
+const { pub, lang, index, showYear = true } = Astro.props;
+const t = useT(lang);
+const d = pub.data;
+const linkLabels = { pdf: 'PDF', code: 'Code', doi: 'DOI', project: 'Project' } as const;
+const links = (Object.keys(linkLabels) as (keyof typeof linkLabels)[])
+  .filter((k) => d.links[k])
+  .map((k) => ({ label: linkLabels[k], href: d.links[k]! }));
+const memberNames = (await getMemberNames()).filter((n) => !d.notMembers.includes(n));
+const authorsHtml = highlightAuthors(d.authors, memberNames);
+---
+
+<article class:list={['pub', { 'pub--no-year': !showYear }]}>
+  {showYear && (
+    <div class="pub__year mono">
+      {index != null ? <span>{String(index).padStart(2, '0')}</span> : null}
+      <span>{d.year}</span>
+    </div>
+  )}
+  <div class="pub__body">
+    <div class="pub__badges">
+      <span class="tag">{t(`pubs.${d.type}`)}</span>
+    </div>
+    <h3 class="pub__title">{d.title}</h3>
+    <p class="pub__authors" set:html={authorsHtml} />
+    <p class="pub__venue">{d.venue}</p>
+  </div>
+  {links.length > 0 && (
+    <div class="pub__links">
+      {links.map((l) => <a href={l.href} class="pub__link mono" target="_blank" rel="noopener">{l.label} ↗</a>)}
+    </div>
+  )}
+</article>
+
+<style>
+  .pub {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+    transition: background 0.25s;
+  }
+  .pub--no-year { grid-template-columns: 1fr auto; }
+  .pub:hover .pub__title { color: var(--accent-ink); }
+  .pub__year { display: flex; flex-direction: column; gap: 6px; color: var(--muted); }
+  .pub__badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .pub__title { font-size: clamp(17px, 1.6vw, 21px); line-height: 1.35; letter-spacing: -0.01em; transition: color 0.2s; margin-bottom: 8px; }
+  .pub__authors { font-size: 14px; color: var(--muted); }
+  .pub__authors :global(strong) { color: var(--text); font-weight: 600; }
+  .pub__venue { font-size: 14px; font-style: italic; margin-top: 2px; }
+  .pub__links { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+  .pub__link {
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .pub__link:hover { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+  @media (max-width: 760px) {
+    .pub { grid-template-columns: 1fr; gap: 12px; }
+    .pub__year { flex-direction: row; }
+    .pub__links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+  }
+</style>

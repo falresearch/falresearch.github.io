@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroOrbit from '../../components/hero/HeroOrbit.astro';
+import Nixie from '../../components/Nixie.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import ResearchTabs from '../../components/research/ResearchTabs.astro';
+import { getLang, langPaths, loc, localizePath, useT } from '../../i18n';
+import { site } from '../../data/site';
+import { getPublications, getResearch } from '../../lib/data';
+
+export const getStaticPaths = langPaths;
+
+const lang = getLang(Astro.params.lang);
+const t = useT(lang);
+
+const [pubs, research] = await Promise.all([getPublications(), getResearch()]);
+// 首页数字：按 site.stats 配置生成，auto:* 为自动统计
+const stats = site.stats.map((s) => {
+  const raw = s.value === 'auto:pubs' ? pubs.length : s.value === 'auto:research' ? research.length : s.value;
+  return {
+    value: typeof raw === 'number' ? raw : lang === 'en' && raw.en != null ? raw.en : raw.zh,
+    unit: 'unit' in s && s.unit ? loc(s.unit, lang) : '',
+    plus: 'plus' in s && s.plus,
+    label: loc(s.label, lang),
+  };
+});
+const keywords = [...new Set(research.flatMap((r) => r.data.keywords))];
+---
+
+<BaseLayout lang={lang}>
+  <!-- ========== 首屏 ========== -->
+  <section class="hero dark grid-bg">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow hero__eyebrow">{loc(site.hero.eyebrow, lang)}</span>
+        <h1 class="display hero__title" set:html={loc(site.hero.title, lang).replace(/\n/g, '<br />')} />
+        <p class="lead hero__lead">{loc(site.hero.lead, lang)}</p>
+        <div class="hero__cta">
+          <a href={localizePath(lang, '/research')} class="btn btn--primary">{t('hero.cta.research')} <span class="arrow">→</span></a>
+          <a href={localizePath(lang, '/contact') + '#join'} class="btn btn--ghost">{t('hero.cta.join')}</a>
+        </div>
+        <div class="hero__nixie"><Nixie /></div>
+      </div>
+      <div class="hero__visual">
+        <HeroOrbit lang={lang} />
+      </div>
+    </div>
+
+    <div class="container">
+      <dl class="stats">
+        {stats.map((s, i) => (
+          <div class="stats__item">
+            <dt class="mono">0{i + 1} / {s.label}</dt>
+            <dd><span data-count={s.value}>{s.value}</span>{s.unit && <span class="stats__unit">{s.unit}</span>}{s.plus && <span class="stats__plus">+</span>}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ========== 关键词滚动条 ========== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {[0, 1].map(() => (
+        <div class="marquee__group">
+          {keywords.map((k) => <span>{k}<i>✦</i></span>)}
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- ========== 简介 ========== -->
+  <section class="section section--tight">
+    <div class="container about">
+      <div class="about__head reveal">
+        <span class="mono about__label">[00] {lang === 'zh' ? '关于我们' : 'About'}</span>
+        <h2 class="about__title" set:html={loc(site.about.title, lang).replace(/\n/g, '<br />')} />
+      </div>
+      <div class="about__main">
+        <p class="about__text reveal">{loc(site.about.body, lang)}</p>
+        <div class="pillars reveal">
+          {site.about.pillars.map((pl, i) => (
+            <a class="pillar" href={localizePath(lang, pl.href.split('#')[0]) + (pl.href.includes('#') ? '#' + pl.href.split('#')[1] : '')}>
+              <span class="mono pillar__idx">0{i + 1}</span>
+              <strong class="pillar__label">{loc(pl.label, lang)}</strong>
+              <span class="pillar__text">{loc(pl.text, lang)}</span>
+              <span class="pillar__go" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 研究方向 ========== -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <SectionHead index="01" label="Research" title={t('home.research')} href={localizePath(lang, '/research')} linkText={t('common.viewAll')} />
+      <ResearchTabs research={research} lang={lang} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* 首屏 */
+  .hero { position: relative; overflow: hidden; }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%; left: -10%;
+    width: 70vw; height: 70vw;
+    background: radial-gradient(circle, rgba(200, 240, 49, 0.1), transparent 55%);
+    pointer-events: none;
+  }
+  .hero__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+    padding-block: clamp(56px, 9vw, 120px) clamp(48px, 6vw, 80px);
+  }
+  .hero__eyebrow { margin-bottom: 28px; }
+  .hero__title { margin-bottom: 28px; }
+  .hero__lead { margin-bottom: 40px; }
+  .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero__nixie { margin-top: 44px; }
+  .hero__visual { max-width: 520px; width: 100%; justify-self: end; }
+
+  .stats {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0;
+    border-top: 1px solid var(--ink-line);
+  }
+  .stats__item { padding: 28px 24px 36px; border-left: 1px solid var(--ink-line); }
+  .stats__item:first-child { border-left: 0; padding-left: 0; }
+  .stats dt { color: var(--ink-muted); margin-bottom: 10px; }
+  .stats dd { margin: 0; font-size: clamp(40px, 5vw, 64px); font-weight: 500; letter-spacing: -0.04em; line-height: 1; }
+  .stats__unit { font-size: 0.5em; margin-left: 4px; letter-spacing: 0; }
+  .stats__plus { color: var(--accent); }
+
+  /* 滚动条 */
+  .marquee { background: var(--accent); color: var(--ink); overflow: hidden; border-block: 1px solid var(--ink); }
+  .marquee__track { display: flex; width: max-content; animation: marquee 36s linear infinite; }
+  .marquee__group { display: flex; }
+  .marquee span {
+    display: inline-flex; align-items: center; gap: 28px;
+    padding: 14px 14px;
+    font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
+  }
+  .marquee i { font-style: normal; font-size: 12px; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+
+  /* 简介 */
+  .about { display: grid; grid-template-columns: minmax(260px, 1fr) 1.6fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .about__head { display: grid; gap: 24px; position: sticky; top: calc(var(--header-h) + 32px); }
+  .about__label { color: var(--muted); }
+  .about__title { font-size: clamp(32px, 4vw, 52px); line-height: 1.15; letter-spacing: -0.02em; }
+  .about__title::after { content: ''; display: block; width: 48px; height: 3px; margin-top: 24px; background: var(--accent); }
+  .about__main { display: grid; gap: 28px; }
+  .about__text { font-size: clamp(17px, 1.5vw, 19px); line-height: 1.85; color: var(--text); max-width: 60ch; }
+
+  /* 三个入口 */
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .pillar { position: relative; display: grid; align-content: start; gap: 8px; padding: 22px 22px 44px; background: var(--card); transition: background 0.25s; }
+  .pillar__idx { font-size: 11px; color: var(--accent-ink); }
+  .pillar__label { font-size: 20px; letter-spacing: -0.01em; }
+  .pillar__text { font-size: 14px; line-height: 1.65; color: var(--muted); }
+  .pillar__go { position: absolute; right: 20px; bottom: 16px; color: var(--muted); transition: transform 0.25s, color 0.25s; }
+  .pillar:hover { background: #fbfbf8; }
+  .pillar:hover .pillar__label, .pillar:hover .pillar__go { color: var(--accent-ink); }
+  .pillar:hover .pillar__go { transform: translateX(4px); }
+
+  @media (max-width: 900px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__visual { justify-self: stretch; max-width: none; aspect-ratio: auto; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stats__item:nth-child(3) { border-left: 0; padding-left: 0; }
+    .stats__item:nth-child(n + 3) { border-top: 1px solid var(--ink-line); }
+    .about { grid-template-columns: 1fr; }
+    .about__head { position: static; }
+    .pillars { grid-template-columns: 1fr; }
+  }</style>
+
+<script>
+  // 数字滚动计数
+  const nums = document.querySelectorAll<HTMLElement>('.stats [data-count]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const el = e.target as HTMLElement;
+        const target = Number(el.dataset.count);
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min(1, (now - start) / 1400);
+          el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        io.unobserve(el);
+      }
+    });
+    nums.forEach((n) => io.observe(n));
+  }
+</script>

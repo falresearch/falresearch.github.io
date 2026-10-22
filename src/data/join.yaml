@@ -1,0 +1,60 @@
+# “加入我们”页面的介绍板块，order 决定显示顺序；points 为每个板块下的要点
+- id: gain
+  order: 1
+  title: { zh: 你将获得, en: What you will gain }
+  points:
+    zh:
+      - 参与课题组的在研课题，经历从文献阅读、问题定义、实验设计到论文写作的完整科研训练
+      - 导师直接指导，定期参加组会，与不同专业背景的同学交流合作
+      - 有机会以作者身份发表学术论文，或参加学科竞赛
+      - 表现优秀的同学，导师可为升学深造出具推荐信
+    en:
+      - Work on the lab's ongoing projects and get end-to-end research training, from reading the literature and framing questions to designing experiments and writing papers
+      - Direct mentoring from the PI, regular lab meetings, and collaboration with students from different disciplines
+      - Opportunities to co-author academic papers and to take part in academic competitions
+      - Recommendation letters for graduate study for students who do outstanding work
+
+- id: who
+  order: 2
+  title: { zh: 加入要求, en: Requirements }
+  points:
+    zh:
+      - 计算机、智能医学工程、生物医学工程、数据科学等计算机及工科相关专业：绩点专业排名前 30%，主要参与算法研发与实验
+      - 非工科专业（如临床医学、临床药学、药学、公共卫生、护理等）：绩点专业排名前 10%，主要参与临床问题定义、数据整理与结果解读
+      - 大一同学尚无完整的绩点排名，不受以上绩点要求限制，欢迎直接联系
+      - 能够熟练使用 ChatGPT、Claude 等大语言模型工具
+      - 不要求已有科研经历
+    en:
+      - "Computer science, intelligent medical engineering, biomedical engineering, data science and other computing or engineering majors: GPA in the top 30% of your major; you will mainly work on algorithms and experiments"
+      - "Non-engineering majors (e.g. clinical medicine, clinical pharmacy, pharmacy, public health, nursing): GPA in the top 10% of your major; you will mainly help define clinical questions, curate data and interpret results"
+      - First-year students, who do not yet have a GPA ranking, are exempt from the GPA requirements above and are welcome to get in touch
+      - Comfortable using large language model tools such as ChatGPT and Claude
+      - No prior research experience required
+
+- id: ways
+  order: 3
+  title: { zh: 参与形式, en: Ways to take part }
+  points:
+    zh:
+      - 课题组在研科研课题
+      - 大学生创新创业训练计划（大创）
+      - “挑战杯”“互联网+”等学科竞赛
+      - 本科毕业设计
+    en:
+      - The lab's ongoing research projects
+      - Undergraduate innovation and entrepreneurship programs
+      - Academic competitions such as the Challenge Cup and Internet+
+      - Bachelor's thesis projects
+
+- id: hope
+  order: 4
+  title: { zh: 我们希望你, en: What we hope for }
+  points:
+    zh:
+      - 对人工智能与医学的交叉研究有真诚的兴趣
+      - 每周能稳定投入一定时间，建议不少于 10 小时
+      - 认真负责，愿意把一件事坚持做完
+    en:
+      - A genuine interest in research at the intersection of AI and medicine
+      - A steady time commitment each week, ideally at least 10 hours
+      - Being responsible and willing to see a project through

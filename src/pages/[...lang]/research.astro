@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ResearchTabs from '../../components/research/ResearchTabs.astro';
+import { getLang, langPaths, useT } from '../../i18n';
+import { getResearch } from '../../lib/data';
+
+export const getStaticPaths = langPaths;
+
+const lang = getLang(Astro.params.lang);
+const t = useT(lang);
+const research = await getResearch();
+---
+
+<BaseLayout lang={lang} title={t('nav.research')}>
+  <PageHero
+    index="02"
+    label="Research"
+    title={t('nav.research')}
+    lead={lang === 'zh' ? '课题组围绕以下四个方向开展人工智能与医学交叉研究，欢迎同行开展合作。' : 'We pursue research at the intersection of AI and medicine along four directions, and welcome collaborations in these areas.'}
+  />
+
+  <section class="section section--tight">
+    <div class="container">
+      <ResearchTabs research={research} lang={lang} />
+    </div>
+  </section>
+</BaseLayout>

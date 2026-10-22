@@ -1,0 +1,36 @@
+/* 首屏总览动画的通用动效（线稿风格）
+   ha-draw 描线绘出（元素需 pathLength="1"）  ha-fade 淡入  ha-pop 弹出
+   ha-flow 虚线流动  ha-pulse 呼吸  ha-wave 声纹跳动  ha-rock 摆动  ha-spin / ha-spin-rev 旋转
+   --d 为开始延迟 */
+.ha { color: var(--ink-text); overflow: visible; }
+.ha .ha-lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; fill: currentColor; fill-opacity: 0.55; stroke: none; }
+.ha .ha-cap { font-family: var(--font-sans); font-size: 12px; font-weight: 600; fill: currentColor; stroke: none; }
+.ha .ha-acc { stroke: var(--accent); }
+.ha .ha-acc-fill { fill: var(--accent); stroke: none; }
+.ha .ha-soft { fill: var(--accent); fill-opacity: 0.14; stroke: none; }
+
+.ha .ha-pop, .ha .ha-pulse, .ha .ha-wave { transform-box: fill-box; transform-origin: center; }
+
+.ha .ha-draw { stroke-dasharray: 1; animation: ha-draw 1s cubic-bezier(0.6, 0, 0.3, 1) var(--d, 0s) both; }
+.ha .ha-fade { animation: ha-fade 0.7s ease var(--d, 0s) both; }
+.ha .ha-pop { animation: ha-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) var(--d, 0s) both; }
+.ha .ha-flow { animation: ha-fade 0.6s ease var(--d, 0s) both, ha-flow 1.6s linear var(--d, 0s) infinite; }
+.ha .ha-pulse { animation: ha-pulse 1.6s ease-in-out var(--d, 0s) infinite; }
+.ha .ha-wave { animation: ha-wave var(--w, 0.6s) ease-in-out var(--d, 0s) infinite alternate; }
+.ha .ha-rock { animation: ha-rock 2.8s ease-in-out var(--d, 0s) infinite alternate; }
+.ha .ha-spin { transform-box: view-box; animation: ha-spin var(--t, 60s) linear infinite; }
+.ha .ha-spin-rev { transform-box: view-box; animation: ha-spin var(--t, 60s) linear infinite reverse; }
+
+@keyframes ha-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes ha-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ha-pop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+@keyframes ha-flow { to { stroke-dashoffset: -24; } }
+@keyframes ha-pulse { 0%, 100% { transform: scale(1); opacity: 0.95; } 50% { transform: scale(1.4); opacity: 0.35; } }
+@keyframes ha-wave { from { transform: scaleY(0.3); } to { transform: scaleY(1.15); } }
+@keyframes ha-rock { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+@keyframes ha-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ha *, .ha { animation: none !important; }
+  .ha animateMotion { display: none; }
+}

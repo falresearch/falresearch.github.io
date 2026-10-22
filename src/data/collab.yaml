@@ -1,0 +1,30 @@
+# “联系我们”页面中“科研合作”部分的介绍板块，order 决定显示顺序；points 为要点
+- id: partners
+  order: 1
+  title: { zh: 欢迎合作的同行, en: Who we work with }
+  points:
+    zh:
+      - 临床科室的医生与研究者：带着真实的临床问题与数据，共同探索 AI 解决方案
+      - 公共卫生、流行病学与医学信息学领域的研究者
+      - 计算机、人工智能与数据科学领域的同行
+      - 医院信息中心、医学教育机构与相关企业
+    en:
+      - Clinicians and clinical researchers who bring real-world clinical questions and data
+      - Researchers in public health, epidemiology and medical informatics
+      - Colleagues in computer science, artificial intelligence and data science
+      - Hospital IT departments, medical education institutions and industry partners
+
+- id: forms
+  order: 2
+  title: { zh: 合作形式, en: Ways to collaborate }
+  points:
+    zh:
+      - 联合申报科研项目与基金
+      - 围绕临床问题开展数据分析与模型研发
+      - 共同研发医学大模型应用与教学系统
+      - 学术交流、联合发表与学生联合指导
+    en:
+      - Joint grant and project applications
+      - Data analysis and model development around clinical questions
+      - Co-developing medical LLM applications and teaching systems
+      - Academic exchange, co-authored publications and co-supervision of students

@@ -1,0 +1,177 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Avatar from '../../components/Avatar.astro';
+import MemberCard from '../../components/MemberCard.astro';
+import { getLang, langPaths, loc, localizePath, useT } from '../../i18n';
+import { getPeople, labMem, roleOrder } from '../../lib/data';
+
+export const getStaticPaths = langPaths;
+
+const lang = getLang(Astro.params.lang);
+const t = useT(lang);
+const people = await getPeople();
+const pi = people.filter((p) => p.data.role === 'pi');
+const groups = roleOrder
+  .filter((r) => r !== 'pi')
+  .map((role) => ({ role, members: people.filter((p) => p.data.role === role) }))
+  // 本科生分组始终显示，末尾留一张“虚位以待”卡片
+  .filter((g) => g.members.length > 0 || g.role === 'undergrad');
+const nextMem = Math.max(0, ...people.map((p) => p.mem)) + 1;
+---
+
+<BaseLayout lang={lang} title={t('nav.people')}>
+  <PageHero
+    index="04"
+    label="People"
+    title={t('nav.people')}
+    lead={lang === 'zh' ? '一支充满好奇心、跨学科背景的研究团队。' : 'A curious, interdisciplinary team of researchers.'}
+  />
+
+  {pi.map((p) => (
+    <section class="section section--tight">
+      <div class="container">
+        <div class="pi reveal">
+          <div class="pi__photo">
+            <Avatar name={loc(p.data.name, lang)} src={p.data.avatar} seed={p.id} />
+            <span class="mem mem--photo mono">{labMem(p.mem)}</span>
+          </div>
+          <div class="pi__body">
+            <span class="eyebrow">{t('people.pi')}</span>
+            <h2 class="h2">{loc(p.data.name, lang)}</h2>
+            {p.data.title && <p class="pi__title">{loc(p.data.title, lang)}</p>}
+            {p.data.bio && <p class="pi__bio">{loc(p.data.bio, lang)}</p>}
+            {p.data.interests && (
+              <p class="pi__interests"><span class="mono">{lang === 'zh' ? '研究兴趣' : 'Interests'}</span>{loc(p.data.interests, lang)}</p>
+            )}
+            <div class="pi__links">
+              {p.data.email && <a class="btn btn--ghost" href={`mailto:${p.data.email}`}>Email</a>}
+              {p.data.homepage && <a class="btn btn--ghost" href={p.data.homepage} target="_blank" rel="noopener">Homepage ↗</a>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  {groups.map((g, gi) => (
+    <section class:list={['section section--tight', { alt: gi % 2 === 0 }]}>
+      <div class="container">
+        <div class="ghead reveal">
+          <h2 class="h3">{t(`people.${g.role}`)}</h2>
+          <span class="mono ghead__count">{String(g.members.length).padStart(2, '0')}</span>
+        </div>
+        {g.role === 'undergrad' ? (
+          <div class="mgrid">
+            {g.members.map((m) => <MemberCard member={m} lang={lang} />)}
+            <a href={localizePath(lang, '/contact') + '#join'} class="mvacancy reveal">
+              <span class="mono mvacancy__mem">{labMem(nextMem)}</span>
+              <span class="vacancy__plus" aria-hidden="true">+</span>
+              <span class="mvacancy__text">
+                <strong>{t('people.vacancy')}</strong>
+                <span>{t('people.vacancy.body')}</span>
+              </span>
+              <span class="mvacancy__go" aria-hidden="true">→</span>
+            </a>
+          </div>
+        ) : g.role === 'alumni' ? (
+          <div class="mgrid">
+            {g.members.map((m) => <MemberCard member={m} lang={lang} />)}
+          </div>
+        ) : (
+          <div class="pgrid">
+            {g.members.map((m, i) => {
+              const Tag = m.data.homepage ? 'a' : 'div';
+              return (
+                <Tag class="person reveal" style={`transition-delay:${(i % 4) * 60}ms`} {...(m.data.homepage ? { href: m.data.homepage, target: '_blank', rel: 'noopener' } : {})}>
+                  <div class="person__photo">
+                    <Avatar name={loc(m.data.name, lang)} src={m.data.avatar} seed={m.id} />
+                    <span class="mem mem--photo mono">{labMem(m.mem)}</span>
+                  </div>
+                  <div class="person__info">
+                    <h3 class="person__name">{loc(m.data.name, lang)}</h3>
+                    {m.data.title && <p class="person__title mono">{loc(m.data.title, lang)}</p>}
+                    {m.data.interests && <p class="person__int">{loc(m.data.interests, lang)}</p>}
+                    {m.data.email && <p class="person__mail">{m.data.email}</p>}
+                  </div>
+                </Tag>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </section>
+  ))}
+</BaseLayout>
+
+<style>
+  .alt { background: var(--paper-2); }
+
+  .pi { display: grid; grid-template-columns: 200px 1fr; gap: clamp(28px, 4vw, 56px); align-items: start; }
+  .pi__photo, .person__photo { position: relative; border-radius: var(--radius); overflow: hidden; }
+
+  /* 成员编号（致敬未来道具研究所的 Lab Mem No.） */
+  .mem { font-size: 10px; letter-spacing: 0.14em; color: var(--muted); }
+  .mem--photo {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    padding: 3px 7px;
+    background: rgba(11, 13, 16, 0.72);
+    color: var(--accent);
+    border-radius: 2px;
+    backdrop-filter: blur(4px);
+  }
+  .pi__body { display: grid; gap: 18px; }
+  .pi__title { font-size: 17px; color: var(--muted); }
+  .pi__bio { font-size: 17px; max-width: 64ch; }
+  .pi__interests { display: flex; gap: 16px; align-items: baseline; padding-top: 16px; border-top: 1px solid var(--line); }
+  .pi__interests .mono { color: var(--muted); flex: none; }
+  .pi__links { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .ghead { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 16px; margin-bottom: 28px; border-bottom: 1px solid var(--text); }
+  .ghead__count { color: var(--muted); }
+
+  .pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 28px 20px; }
+  .person { display: grid; gap: 14px; }
+  .person__name { font-size: 18px; letter-spacing: -0.01em; }
+  a.person:hover .person__name { color: var(--accent-ink); }
+  .person__info { display: grid; gap: 4px; }
+  .person__title { color: var(--muted); font-size: 11px; }
+  .person__int { font-size: 14px; }
+  .person__mail { font-size: 13px; color: var(--muted); word-break: break-all; }
+
+  /* 横向成员卡片列表（本科生 / 毕业成员），一人一行 */
+  .mgrid { display: grid; gap: 16px; }
+
+  /* “虚位以待”：与成员卡片同宽的一条虚线横栏 */
+  .mvacancy {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    align-items: center;
+    gap: 0 24px;
+    padding: 20px 24px;
+    border: 1px dashed var(--muted);
+    border-radius: var(--radius);
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .mvacancy__mem { justify-self: start; font-size: 10px; letter-spacing: 0.14em; padding: 3px 7px; border: 1px dashed var(--muted); border-radius: 2px; color: var(--muted); }
+  .vacancy__plus { font-size: 32px; line-height: 1; font-weight: 300; color: var(--muted); transition: transform 0.4s, color 0.3s; }
+  .mvacancy__text { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; font-size: 14px; color: var(--muted); }
+  .mvacancy__text strong { font-size: 20px; color: var(--text); letter-spacing: -0.01em; }
+  .mvacancy__go { font-size: 20px; color: var(--muted); transition: transform 0.3s, color 0.3s; }
+  .mvacancy:hover { border-color: var(--text); background: var(--card); }
+  .mvacancy:hover .vacancy__plus { transform: rotate(90deg); color: var(--accent-ink); }
+  .mvacancy:hover strong, .mvacancy:hover .mvacancy__go { color: var(--accent-ink); }
+  .mvacancy:hover .mvacancy__go { transform: translateX(4px); }
+  @media (max-width: 680px) {
+    .mvacancy { grid-template-columns: auto 1fr auto; gap: 12px 16px; padding: 20px; }
+    .mvacancy__mem { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 760px) {
+    .pi { grid-template-columns: 1fr; }
+    .pi__photo { max-width: 160px; }
+    .pgrid { grid-template-columns: repeat(2, 1fr); gap: 20px 14px; }
+  }
+</style>

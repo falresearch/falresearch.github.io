@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import PubItem from '../../components/PubItem.astro';
+import { getLang, langPaths, useT } from '../../i18n';
+import { getPublications } from '../../lib/data';
+import { site } from '../../data/site';
+
+export const getStaticPaths = langPaths;
+
+const lang = getLang(Astro.params.lang);
+const t = useT(lang);
+const pubs = await getPublications();
+const years = [...new Set(pubs.map((p) => p.data.year))];
+---
+
+<BaseLayout lang={lang} title={t('nav.publications')}>
+  <PageHero
+    index="03"
+    label="Publications"
+    title={t('nav.publications')}
+    lead={lang === 'zh' ? '课题组成员以粗体标出。' : 'Lab members are shown in bold.'}
+  >
+    <a href={site.scholar} class="btn btn--ghost scholar" target="_blank" rel="noopener">Google Scholar ↗</a>
+  </PageHero>
+
+  <section class="section section--tight">
+    <div class="container">
+      {years.map((y) => (
+        <div class="year">
+          <div class="year__label">
+            <span class="year__num">{y}</span>
+          </div>
+          <div class="year__list">
+            {pubs.filter((p) => p.data.year === y).map((p) => <PubItem pub={p} lang={lang} showYear={false} />)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .scholar { margin-top: 32px; }
+  .year { display: grid; grid-template-columns: 160px 1fr; gap: 24px; }
+  .year__label { padding-top: 24px; border-top: 2px solid var(--text); }
+  .year__num { position: sticky; top: calc(var(--header-h) + 24px); font-size: 40px; font-weight: 500; letter-spacing: -0.04em; }
+  .year__list { margin-bottom: 40px; }
+  @media (max-width: 760px) {
+    .year { grid-template-columns: 1fr; gap: 0; }
+    .year__label { padding-top: 16px; }
+    .year__num { position: static; font-size: 28px; }
+  }
+</style>

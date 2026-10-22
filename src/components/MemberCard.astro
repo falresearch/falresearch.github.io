@@ -1,0 +1,170 @@
+---
+// 纯文字成员卡片（不放照片）：用于本科生和毕业成员
+// 成果按类型（论文 / 获奖 / 项目 / 其他）逐条列出，成果多卡片就长，没有成果就只显示课题
+import type { CollectionEntry } from 'astro:content';
+import { type Lang, loc, useT } from '../i18n';
+import { getPublications, labMem } from '../lib/data';
+
+interface Props {
+  member: CollectionEntry<'people'> & { mem: number };
+  lang: Lang;
+}
+const { member, lang } = Astro.props;
+const t = useT(lang);
+const d = member.data;
+const name = loc(d.name, lang);
+const altName = lang === 'zh' ? d.name.en : d.name.zh;
+// 在组时间：只写了开始时间（如 “2024.09 –”）时自动补上“至今”
+const period = d.period ? (/[–-]\s*$/.test(d.period) ? `${d.period.replace(/\s*[–-]\s*$/, '')} – ${t('people.present')}` : d.period) : '';
+
+// 把成果整理成统一的展示结构；论文通过 pub 关联到论文库，显示全称与原文链接
+const pubs = await getPublications();
+const achievements = d.achievements.map((a) => {
+  const note = a.zh ? loc({ zh: a.zh, en: a.en }, lang) : '';
+  if (a.pub) {
+    const p = pubs.find((x) => x.id === a.pub);
+    if (!p) throw new Error(`people.yaml 中 ${member.id} 的成果引用了不存在的论文 id：${a.pub}`);
+    const { doi, pdf, project, code } = p.data.links;
+    return {
+      type: a.type,
+      title: p.data.title,
+      meta: [p.data.venue.split(',')[0], p.data.year, note].filter(Boolean).join(' · '),
+      href: a.link ?? doi ?? pdf ?? project ?? code,
+    };
+  }
+  return { type: a.type, title: note, meta: '', href: a.link };
+});
+---
+
+<article class="mcard reveal">
+  <!-- 顶部信息栏：编号、姓名、专业年级；右侧在组时间与去向 -->
+  <header class="mcard__head">
+    <span class="mono mcard__mem">{labMem(member.mem)}</span>
+    <h3 class="mcard__name">
+      {name}
+      {altName && altName !== name && <span class="mcard__alt">{altName}</span>}
+    </h3>
+    {d.major && <span class="mcard__major">{loc(d.major, lang)}</span>}
+    {(d.period || d.now) && (
+      <span class="mcard__extra">
+        {period && (
+          <span class="mcard__meta">
+            <span class="mono mcard__metalbl">{t('people.period')}</span>
+            <span class="mono mcard__period">{period}</span>
+          </span>
+        )}
+        {d.now && (
+          <span class="mcard__meta mcard__meta--now">
+            <span class="mono mcard__metalbl">{t('people.now')}</span>
+            <span class="mcard__now">{loc(d.now, lang)}</span>
+          </span>
+        )}
+      </span>
+    )}
+  </header>
+
+  <!-- 课题：通栏，多个课题横向排列 -->
+  {d.topics.length > 0 && (
+    <section class="mcard__row">
+      <span class="mono mcard__label">{t('people.topic')}</span>
+      <ul class="mcard__topics">{d.topics.map((tp) => <li>{loc(tp, lang)}</li>)}</ul>
+    </section>
+  )}
+
+  <!-- 成果：通栏，一条一行 -->
+  {achievements.length > 0 && (
+    <section class="mcard__row">
+      <span class="mono mcard__label">{t('people.achievements')}</span>
+      <ul class="mcard__ach">
+        {achievements.map((a) => (
+          <li class={`ach ach--${a.type}`}>
+            <span class="mono ach__type">{t(`people.ach.${a.type}`)}</span>
+            <span class="ach__body">
+              {a.href ? (
+                <a class="ach__title ach__link" href={a.href} target="_blank" rel="noopener">{a.title}<span class="ach__arrow" aria-hidden="true"> ↗</span></a>
+              ) : (
+                <span class="ach__title">{a.title}</span>
+              )}
+              {a.meta && <span class="ach__meta">{a.meta}</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</article>
+
+<style>
+  /* 横向通栏卡片：顶部信息栏，下面课题、成果各占一整行 */
+  .mcard {
+    display: grid;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color 0.3s;
+  }
+  .mcard:hover { border-color: var(--text); }
+  .mcard > * { padding: 20px 24px; }
+  .mcard > * + * { border-top: 1px solid var(--line); }
+
+  .mcard__head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .mcard__mem {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    padding: 3px 7px;
+    background: var(--ink);
+    color: var(--accent);
+    border-radius: 2px;
+  }
+  .mcard__name { font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: baseline; gap: 10px; }
+  .mcard__alt { font-size: 13px; font-weight: 400; color: var(--muted); }
+  .mcard__major { font-size: 14px; color: var(--muted); }
+  .mcard__extra { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin-left: auto; }
+  .mcard__meta { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; }
+  .mcard__metalbl { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
+  .mcard__period { font-size: 12px; letter-spacing: 0.04em; }
+  .mcard__meta--now { border-color: var(--accent-ink); }
+  .mcard__now { font-size: 14px; font-weight: 600; }
+
+  /* 每一行：左侧小标题，右侧内容 */
+  .mcard__row { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 16px; align-items: baseline; }
+  .mcard__label { font-size: 10px; color: var(--muted); letter-spacing: 0.12em; }
+
+  .mcard__topics { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mcard__topics li {
+    padding: 4px 12px;
+    background: var(--paper-2);
+    border-radius: 999px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* 成果列表：左侧类型标记 + 右侧内容，一条一行 */
+  .mcard__ach { display: grid; gap: 12px; }
+  .ach { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: baseline; font-size: 14px; line-height: 1.55; }
+  .ach__type {
+    justify-self: start;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 1px 6px;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .ach--paper .ach__type { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+  .ach--award .ach__type { border-color: var(--signal); color: var(--signal); }
+  .ach--project .ach__type { background: var(--ink); border-color: var(--ink); color: var(--ink-text); }
+  .ach__body { display: grid; gap: 2px; min-width: 0; }
+  .ach__link { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; transition: color 0.2s, text-decoration-color 0.2s; }
+  .ach__link:hover { color: var(--accent-ink); text-decoration-color: currentColor; }
+  .ach__arrow { color: var(--muted); }
+  .ach__meta { font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 680px) {
+    .mcard > * { padding: 18px 20px; }
+    .mcard__extra { margin-left: 0; width: 100%; }
+    .mcard__row { grid-template-columns: 1fr; gap: 10px; }
+    .mcard__topics li { border-radius: var(--radius); }
+  }
+</style>

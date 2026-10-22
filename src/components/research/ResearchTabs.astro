@@ -1,0 +1,159 @@
+---
+// 研究方向展示（首页与研究方向页共用）：左侧方向目录 + 右侧动画线稿 —— 点击或悬停切换，未操作时自动轮播；手机上改为依次排列
+import type { CollectionEntry } from 'astro:content';
+import { type Lang, loc } from '../../i18n';
+import LineArt from './art/LineArt.astro';
+
+interface Props {
+  research: CollectionEntry<'research'>[];
+  lang: Lang;
+}
+const { research, lang } = Astro.props;
+---
+
+<div class="rtabs" data-rtabs>
+  <ol class="rtabs__nav" role="tablist">
+    {research.map((r, i) => (
+      <li>
+        <button class:list={['rtab', { 'is-active': i === 0 }]} role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-index={i}>
+          <span class="mono rtab__num">{String(r.data.order).padStart(2, '0')}</span>
+          <span class="rtab__text">
+            <span class="rtab__title">{loc(r.data.title, lang)}</span>
+            {lang === 'zh' && r.data.title.en && <span class="mono rtab__en">{r.data.title.en}</span>}
+          </span>
+          <span class="rtab__bar" aria-hidden="true"></span>
+        </button>
+      </li>
+    ))}
+  </ol>
+
+  <div class="rtabs__panels">
+    {research.map((r, i) => (
+      <section class:list={['rpanel', { 'is-active': i === 0 }]} role="tabpanel" data-index={i}>
+        <div class:list={['rpanel__art dark', { 'is-on': i === 0 }]}>
+          <LineArt theme={r.id} animated />
+        </div>
+        <div class="rpanel__body">
+          <span class="mono rpanel__num">{String(r.data.order).padStart(2, '0')}</span>
+          <h3 class="rpanel__title">{loc(r.data.title, lang)}</h3>
+          <p class="rpanel__sum">{loc(r.data.summary, lang)}</p>
+          <div class="rpanel__tags">{r.data.keywords.map((k) => <span class="tag">{k}</span>)}</div>
+        </div>
+      </section>
+    ))}
+  </div>
+</div>
+
+<style>
+  .rtabs { display: grid; grid-template-columns: minmax(280px, 0.9fr) 1.6fr; gap: 40px; align-items: stretch; }
+
+  .rtabs__nav { list-style: none; margin: 0; padding: 0; display: grid; align-content: start; border-top: 1px solid var(--text); }
+  .rtab {
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+    width: 100%;
+    padding: 24px 4px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+  .rtab__num { font-size: 13px; padding-top: 6px; }
+  .rtab__text { display: grid; gap: 4px; }
+  .rtab__title { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
+  .rtab__en { font-size: 10px; letter-spacing: 0.1em; }
+  .rtab__bar { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; background: var(--accent-ink); }
+  .rtab:hover, .rtab.is-active { color: var(--text); }
+  .rtab.is-active .rtab__num { color: var(--accent-ink); }
+  /* 激活项底部进度条，配合自动轮播 */
+  .rtab.is-active .rtab__bar { animation: rtab-progress var(--rtab-dur, 6s) linear forwards; }
+  .rtabs.is-paused .rtab.is-active .rtab__bar { animation: none; width: 100%; }
+  @keyframes rtab-progress { from { width: 0; } to { width: 100%; } }
+
+  /* 所有面板叠放在同一个网格单元里，容器高度自动取最高的面板，避免文字溢出 */
+  .rtabs__panels { display: grid; }
+  .rpanel {
+    grid-area: 1 / 1;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.45s, transform 0.45s, visibility 0s 0.45s;
+  }
+  .rpanel.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity 0.45s, transform 0.45s; }
+  /* 线稿配图按原始比例 560:240 显示，避免裁切 */
+  .rpanel__art { position: relative; aspect-ratio: 560 / 240; color: var(--ink-text); overflow: hidden; }
+  .rpanel__art :global(svg) { position: absolute; inset: 0; }
+  .rpanel__num { font-size: 12px; color: var(--accent-ink); letter-spacing: 0.1em; margin-bottom: -8px; }
+  .rpanel__body { display: grid; gap: 14px; padding: 28px 32px 32px; }
+  .rpanel__title { font-size: clamp(24px, 2.6vw, 32px); letter-spacing: -0.01em; }
+  .rpanel__sum { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 60ch; }
+  .rpanel__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rpanel { transition: none; }
+    .rtab.is-active .rtab__bar { animation: none; width: 100%; }
+  }
+  /* 窄屏：不做切换，四个方向依次展开 */
+  @media (max-width: 860px) {
+    .rtabs { grid-template-columns: 1fr; }
+    .rtabs__nav { display: none; }
+    .rtabs__panels { gap: 16px; }
+    .rpanel, .rpanel.is-active { grid-area: auto; opacity: 1; visibility: visible; transform: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rtabs]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.rtab')];
+    const panels = [...root.querySelectorAll<HTMLElement>('.rpanel')];
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const DURATION = 7000;
+    // 窄屏时四个方向依次排列，全部播放动画
+    const narrow = window.matchMedia('(max-width: 860px)');
+    const syncNarrow = () => { if (narrow.matches) panels.forEach((p) => p.querySelector('.rpanel__art')!.classList.add('is-on')); };
+    syncNarrow();
+    narrow.addEventListener('change', syncNarrow);
+    root.style.setProperty('--rtab-dur', `${DURATION}ms`);
+    let current = 0;
+    let timer: number | undefined;
+
+    const show = (i: number) => {
+      current = i;
+      tabs.forEach((t, k) => {
+        t.classList.toggle('is-active', k === i);
+        t.setAttribute('aria-selected', String(k === i));
+      });
+      panels.forEach((p, k) => {
+        p.classList.toggle('is-active', k === i);
+        if (k !== i) return;
+        // 第一次切到该方向时播放绘制动画；之后再回来直接显示画好的完成状态
+        const art = p.querySelector<HTMLElement>('.rpanel__art')!;
+        if (art.classList.contains('is-on')) art.classList.add('is-done');
+        else art.classList.add('is-on');
+      });
+    };
+    const stop = () => {
+      window.clearInterval(timer);
+      root.classList.add('is-paused');
+    };
+
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => { stop(); show(i); });
+      t.addEventListener('mouseenter', () => { stop(); show(i); });
+    });
+
+    if (!reduce) {
+      timer = window.setInterval(() => show((current + 1) % tabs.length), DURATION);
+    } else {
+      root.classList.add('is-paused');
+    }
+  });
+</script>

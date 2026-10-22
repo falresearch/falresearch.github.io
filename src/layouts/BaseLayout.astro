@@ -1,0 +1,80 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { type Lang, loc, localizePath, stripLang } from '../i18n';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+}
+
+const { lang, title, description } = Astro.props;
+const siteName = loc(site.name, lang);
+const pageTitle = title ? `${title} · ${siteName}` : siteName;
+const desc = description ?? loc(site.hero.lead, lang);
+const path = stripLang(Astro.url.pathname);
+const alternates = {
+  'zh-CN': new URL(localizePath('zh', path), Astro.site).href,
+  en: new URL(localizePath('en', path), Astro.site).href,
+};
+---
+
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0b0d10" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="alternate" hreflang="zh-CN" href={alternates['zh-CN']} />
+    <link rel="alternate" hreflang="en" href={alternates.en} />
+    <link rel="alternate" hreflang="x-default" href={alternates['zh-CN']} />
+  </head>
+  <body>
+    <Header lang={lang} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <script>
+      // 彩蛋：只有打开开发者工具的人才会看到
+      console.log(
+        '%cFAL%c Future AI Lab\n%cEl Psy Kongroo.',
+        'font: 700 28px monospace; color: #0b0d10; background: #c8f031; padding: 4px 10px;',
+        'font: 500 14px monospace; color: #8a9099;',
+        'font: italic 13px monospace; color: #ff7a1f; text-shadow: 0 0 6px #ff5a00; padding-top: 8px;',
+      );
+
+      // 滚动出现动画
+      const els = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px' },
+        );
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('is-in'));
+      }
+    </script>
+  </body>
+</html>
