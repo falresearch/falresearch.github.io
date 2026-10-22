@@ -22,7 +22,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
 <header class="header dark">
   <div class="container header__inner">
     <a href={localizePath(lang, '/')} class="brand" aria-label={loc(site.name, lang)}>
-      <Logo />
+      <Logo size={38} />
       <span class="brand__text">
         <span class="brand__short">{site.shortName}</span>
         <span class="brand__name">{loc(site.name, lang)}</span>

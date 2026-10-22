@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <filter id="g" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.2" result="b" />
+      <feMerge><feMergeNode in="b" /><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+    <radialGradient id="tube" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#ff7a1f" stop-opacity="0.3" />
+      <stop offset="1" stop-color="#140e0a" stop-opacity="1" />
+    </radialGradient>
+    <pattern id="mesh" width="2.5" height="2.5" patternUnits="userSpaceOnUse">
+      <path d="M0 0 H2.5 M0 0 V2.5" stroke="#ff9a4a" stroke-opacity="0.18" stroke-width="0.4" />
+    </pattern>
+  </defs>
+  
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="#0b0d10" stroke="#ffffff" stroke-opacity="0.14" /><g transform="translate(1.2 1.6) scale(0.93)"><path d="M7.0 48 V19.5 a7.5 7.5 0 0 1 15.0 0 V48 Z" fill="url(#tube)" stroke="#ffb27a" stroke-opacity="0.45" stroke-width="0.80" />
+    <path d="M7.0 48 V19.5 a7.5 7.5 0 0 1 15.0 0 V48 Z" fill="url(#mesh)" />
+    <path d="M9.70 20.25 a5.25 5.25 0 0 1 3.30 -4.12" stroke="#ffffff" stroke-opacity="0.32" stroke-width="0.85" stroke-linecap="round" />
+    <path d="M10.2 42 V22 H18.799999999999997 M10.2 31.6 H16.908" stroke="#ffb36b" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" filter="url(#g)" />
+    <circle cx="18.80" cy="22.00" r="1.18" fill="#ffd2a8" /><circle cx="16.91" cy="31.60" r="1.18" fill="#ffd2a8" /><path d="M24.5 48 V19.5 a7.5 7.5 0 0 1 15.0 0 V48 Z" fill="url(#tube)" stroke="#ffb27a" stroke-opacity="0.45" stroke-width="0.80" />
+    <path d="M24.5 48 V19.5 a7.5 7.5 0 0 1 15.0 0 V48 Z" fill="url(#mesh)" />
+    <path d="M27.20 20.25 a5.25 5.25 0 0 1 3.30 -4.12" stroke="#ffffff" stroke-opacity="0.32" stroke-width="0.85" stroke-linecap="round" />
+    <path d="M27.7 42 L32.0 22 L36.3 42 M29.592 34.8 H34.407999999999994" stroke="#ffb36b" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" filter="url(#g)" />
+    <circle cx="32.00" cy="22.00" r="1.18" fill="#ffd2a8" /><path d="M42.0 48 V19.5 a7.5 7.5 0 0 1 15.0 0 V48 Z" fill="url(#tube)" stroke="#ffb27a" stroke-opacity="0.45" stroke-width="0.80" />
+    <path d="M42.0 48 V19.5 a7.5 7.5 0 0 1 15.0 0 V48 Z" fill="url(#mesh)" />
+    <path d="M44.70 20.25 a5.25 5.25 0 0 1 3.30 -4.12" stroke="#ffffff" stroke-opacity="0.32" stroke-width="0.85" stroke-linecap="round" />
+    <path d="M45.2 22 V42 H53.800000000000004" stroke="#ffb36b" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" filter="url(#g)" />
+    <circle cx="53.80" cy="42.00" r="1.18" fill="#ffd2a8" /><rect x="5" y="47" width="54" height="4" rx="1.20" fill="#1c1f24" stroke="#ffffff" stroke-opacity="0.2" stroke-width="0.66" />
+    <path d="M12.71 51 v2.80 M20.43 51 v2.80 M28.14 51 v2.80 M35.86 51 v2.80 M43.57 51 v2.80 M51.29 51 v2.80 " stroke="#e9ebee" stroke-opacity="0.45" stroke-width="0.85" stroke-linecap="round" />
+</g><circle cx="58" cy="44.5" r="2.1" fill="#c8f031" filter="url(#g)" />
+</svg>
