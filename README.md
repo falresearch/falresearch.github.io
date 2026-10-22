@@ -39,7 +39,7 @@ src/
   i18n/          双语工具与界面文案
   components/    页头、页脚、卡片、首屏动画等组件
   layouts/       页面基础布局
-  pages/[...lang]/  所有页面：中文在根路径 /，英文在 /en/
+  pages/[...lang]/  所有页面：英文在根路径 /，中文在 /zh/
   styles/        全局设计系统
 ```
 
