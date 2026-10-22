@@ -47,7 +47,7 @@ export const site = {
   stats: [
     { value: 'auto:pubs', label: { zh: '发表论文', en: 'Publications' }, plus: true },
     { value: { zh: 20, en: 200 }, unit: { zh: '万', en: 'K' }, label: { zh: '临床电子病历', en: 'EHR records' }, plus: true },
-    { value: 300, label: { zh: '虚拟患者结构化病例', en: 'Structured virtual-patient cases' }, plus: true },
+    { value: 3000, label: { zh: '虚拟患者结构化病例', en: 'Structured virtual-patient cases' }, plus: true },
     { value: 'auto:research', label: { zh: '研究方向', en: 'Research areas' } },
   ],
   scholar: 'https://scholar.google.com/citations?user=DCDjlOYAAAAJ',
