@@ -12,9 +12,11 @@ interface Props {
   lang: Lang;
   title?: string;
   description?: string;
+  /** 是否按浏览器语言自动跳转（404 页关闭，避免跳到不存在的地址） */
+  autoLang?: boolean;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, autoLang = true } = Astro.props;
 const siteName = loc(site.name, lang);
 const pageTitle = title ? `${title} · ${siteName}` : siteName;
 const desc = description ?? loc(site.hero.lead, lang);
@@ -23,6 +25,7 @@ const alternates = {
   'zh-CN': new URL(localizePath('zh', path), Astro.site).href,
   en: new URL(localizePath('en', path), Astro.site).href,
 };
+const enHref = localizePath('en', path);
 ---
 
 <!doctype html>
@@ -39,7 +42,22 @@ const alternates = {
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <link rel="alternate" hreflang="zh-CN" href={alternates['zh-CN']} />
     <link rel="alternate" hreflang="en" href={alternates.en} />
-    <link rel="alternate" hreflang="x-default" href={alternates.en} />
+    <link rel="alternate" hreflang="x-default" href={alternates['zh-CN']} />
+    <script is:inline define:vars={{ lang, enHref, autoLang }}>
+      // 浏览器语言判断：默认中文；首次访问中文页时，若浏览器首选语言是英文则跳到英文版。
+      // 用户手动点过语言切换后记住选择，不再自动跳转。
+      try {
+        var saved = localStorage.getItem('fal-lang');
+        var pref = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+        if (autoLang && lang === 'zh' && !saved && /^en(-|$)/i.test(pref)) {
+          location.replace(enHref + location.search + location.hash);
+        }
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest && e.target.closest('a.lang');
+          if (a) localStorage.setItem('fal-lang', a.getAttribute('lang') === 'en' ? 'en' : 'zh');
+        });
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <Header lang={lang} />

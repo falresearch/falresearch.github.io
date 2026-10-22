@@ -1,18 +1,18 @@
-// 双语工具：英文为默认语言（根路径，无前缀），中文挂在 /zh/ 下
+// 双语工具：中文为默认语言（无前缀），英文挂在 /en/ 下
 export const languages = { zh: '中文', en: 'English' } as const;
 export type Lang = keyof typeof languages;
-export const defaultLang: Lang = 'en';
+export const defaultLang: Lang = 'zh';
 
 /** 内容里的双语字段，例如 { zh: '张三', en: 'San Zhang' } */
 export type Localized = { zh: string; en?: string };
 
-/** 用于 [...lang] 动态路由：默认语言（英文）对应 undefined（根路径），中文对应 'zh' */
+/** 用于 [...lang] 动态路由：zh 对应 undefined（根路径），en 对应 'en' */
 export function langPaths() {
-  return [{ params: { lang: undefined } }, { params: { lang: 'zh' } }];
+  return [{ params: { lang: undefined } }, { params: { lang: 'en' } }];
 }
 
 export function getLang(param: string | undefined): Lang {
-  return param === 'zh' ? 'zh' : 'en';
+  return param === 'en' ? 'en' : 'zh';
 }
 
 /** 取双语字段，英文缺失时回退到中文 */
@@ -34,7 +34,7 @@ export function localizePath(lang: Lang, path = '/'): string {
 /** 去掉当前 URL 中的 base 和语言前缀，得到与语言无关的路径 */
 export function stripLang(pathname: string): string {
   let p = pathname.startsWith(base) ? pathname.slice(base.length) : pathname;
-  p = p.replace(/^\/(en|zh)(?=\/|$)/, '');
+  p = p.replace(/^\/en(?=\/|$)/, '');
   return p || '/';
 }
 
