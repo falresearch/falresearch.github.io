@@ -45,7 +45,7 @@ src/
 
 ## 部署
 
-线上地址：**https://fil-hq.github.io/**
+线上地址：**https://falresearch.github.io/**
 
 - **GitHub Pages（当前使用）**：推送到 `main` 分支后，GitHub Actions（`.github/workflows/deploy.yml`）会自动构建并发布，访问地址与子路径自动识别，无需改代码。部署进度见仓库的 Actions 页面。
 - **其他服务器**：构建时通过环境变量指定地址，例如 `SITE=https://xx.edu.cn BASE=/lab/ npm run build`（放在域名根目录时 `BASE=/`），再把 `dist/` 目录上传即可。
