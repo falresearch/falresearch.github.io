@@ -85,6 +85,47 @@
     - { zh: 大模型虚拟患者系统研发, en: Developing the LLM-based virtual patient system }
     - { zh: 基于大语言模型的宫内节育器不良事件关联性评价分类, en: LLM-based causality assessment of intrauterine device adverse events }
   now: { zh: 保研至 四川大学, en: "Graduate study, Sichuan University" }
+- id: ma-jianhao
+  role: undergrad
+  name: { zh: 马健豪, en: Jianhao Ma }
+  aliases: [J Ma]
+  major: { zh: 智能医学工程 · 2024 级, en: Intelligent Medical Engineering · Class of 2028 }
+  period: 2024 –
+  topics:
+    - { zh: 大模型虚拟患者系统研发, en: Developing the LLM-based virtual patient system }
+    - { zh: 大语言模型辅助的线上自闭症社区文本标注与分析, en: LLM-assisted annotation and analysis of online autism communities }
+  achievements:
+    - { type: paper, pub: jmir-2026-autism-llm, zh: 第二作者, en: Second author }
+    - { type: project, zh: 省级大学生创新创业训练计划项目 · 负责人 · 在研, en: "Provincial Undergraduate Innovation Project · Project lead · Ongoing" }
+    - { type: project, zh: 校级大学生创新创业训练计划项目 · 负责人 · 已结题, en: "University Undergraduate Innovation Project · Project lead · Completed" }
+    - { type: award, zh: 2026 中国大学生计算机设计大赛 · 校赛三等奖, en: "2026 China Collegiate Computing Contest · University 3rd Prize" }
+- id: hu-yujia
+  role: undergrad
+  name: { zh: 胡钰佳, en: Yujia Hu }
+  aliases: [Y Hu]
+  major: { zh: 智能医学工程 · 2024 级, en: Intelligent Medical Engineering · Class of 2028 }
+  period: 2024 –
+  topics:
+    - { zh: 大语言模型驱动的虚拟患者与语音交互系统, en: LLM-driven virtual patients with voice interaction }
+    - { zh: 大语言模型辅助的线上自闭症社区文本标注与分析, en: LLM-assisted annotation and analysis of online autism communities }
+  achievements:
+    - { type: paper, pub: jmir-2026-autism-llm, zh: 第三作者, en: Third author }
+    - { type: project, zh: 校级大学生创新创业训练计划项目 · 第一负责人, en: "University Undergraduate Innovation Project · Lead" }
+    - { type: award, zh: 2026 中国大学生计算机设计大赛 · 校赛三等奖, en: "2026 China Collegiate Computing Contest · University 3rd Prize" }
+- id: chen-yu
+  role: undergrad
+  name: { zh: 陈菀, en: Yu Chen }
+  aliases: [Y Chen]
+  major: { zh: 智能医学工程 · 2024 级, en: Intelligent Medical Engineering · Class of 2028 }
+  period: 2024 –
+  topics:
+    - { zh: 基于多模态数据的智慧居家养老大模型应用系统, en: Multimodal LLM application system for smart home-based elderly care }
+    - { zh: 大语言模型驱动的虚拟患者与语音交互系统, en: LLM-driven virtual patients with voice interaction }
+    - { zh: 社交媒体婚育相关视频与评论的大模型辅助分析, en: LLM-assisted analysis of marriage- and childbearing-related videos and comments on social media }
+  achievements:
+    - { type: paper, pub: jmir-2026-autism-llm, zh: 第五作者, en: Fifth author }
+    - { type: project, zh: 院级大学生创新创业训练计划项目 · 第一负责人, en: "School-level Undergraduate Innovation Project · Lead" }
+    - { type: project, zh: 校级大学生创新创业训练计划项目 · 第二负责人 · 在研, en: "University Undergraduate Innovation Project · Co-lead · Ongoing" }
 
 # ---------------------------------------------------------------------------
 # 本科生 / 毕业成员模板（复制一段、去掉行首的 # 并修改即可）
