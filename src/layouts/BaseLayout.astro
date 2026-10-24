@@ -26,6 +26,8 @@ const alternates = {
   en: new URL(localizePath('en', path), Astro.site).href,
 };
 const enHref = localizePath('en', path);
+// 只在正式构建时统计，本地开发不计入
+const baiduId = import.meta.env.PROD ? site.analytics.baidu : '';
 ---
 
 <!doctype html>
@@ -58,6 +60,18 @@ const enHref = localizePath('en', path);
         });
       } catch (e) {}
     </script>
+    {baiduId && (
+      <script is:inline define:vars={{ baiduId }}>
+        // 百度统计
+        var _hmt = _hmt || [];
+        (function () {
+          var hm = document.createElement('script');
+          hm.src = 'https://hm.baidu.com/hm.js?' + baiduId;
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+    )}
   </head>
   <body>
     <Header lang={lang} />

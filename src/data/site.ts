@@ -63,4 +63,6 @@ export const site = {
   social: [
     { label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=DCDjlOYAAAAJ' },
   ],
+  // 访问统计：百度统计站点 ID（tongji.baidu.com → 代码获取，hm.js? 后面那串）；留空则不加载
+  analytics: { baidu: 'b33241095222456a96b2367b7f3ddc85' },
 };

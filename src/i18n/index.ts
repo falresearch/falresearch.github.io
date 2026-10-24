@@ -82,6 +82,7 @@ export const ui = {
     'join.contact': '联系方式',
     'join.email': '邮箱',
     'footer.rights': '保留所有权利',
+    'footer.analytics': '本站使用匿名访问统计以改进网站',
     'footer.quick': '快速链接',
   },
   en: {
@@ -127,6 +128,7 @@ export const ui = {
     'join.contact': 'Contact',
     'join.email': 'Email',
     'footer.rights': 'All rights reserved',
+    'footer.analytics': 'Anonymous analytics help us improve this site',
     'footer.quick': 'Quick links',
   },
 } as const;
