@@ -63,6 +63,8 @@ export const site = {
   social: [
     { label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=DCDjlOYAAAAJ' },
   ],
-  // 访问统计：百度统计站点 ID（tongji.baidu.com → 代码获取，hm.js? 后面那串）；留空则不加载
-  analytics: { baidu: 'b33241095222456a96b2367b7f3ddc85' },
+  // 访问统计（留空则不加载）
+  // baidu：百度统计站点 ID（tongji.baidu.com → 代码获取，hm.js? 后面那串）
+  // clarity：Microsoft Clarity 项目 ID（clarity.microsoft.com → 设置 → 安装代码里的那串），用于查看访问路径与热力图
+  analytics: { baidu: 'b33241095222456a96b2367b7f3ddc85', clarity: 'z2xjiwai3n' },
 };

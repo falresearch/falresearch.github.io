@@ -28,6 +28,7 @@ const alternates = {
 const enHref = localizePath('en', path);
 // 只在正式构建时统计，本地开发不计入
 const baiduId = import.meta.env.PROD ? site.analytics.baidu : '';
+const clarityId = import.meta.env.PROD ? site.analytics.clarity : '';
 ---
 
 <!doctype html>
@@ -65,6 +66,13 @@ const baiduId = import.meta.env.PROD ? site.analytics.baidu : '';
         {/* 百度统计：_hmt 必须是全局变量，所以不用 define:vars（它会包一层函数作用域） */}
         <script is:inline>window._hmt = window._hmt || [];</script>
         <script is:inline async src={`https://hm.baidu.com/hm.js?${baiduId}`}></script>
+      </Fragment>
+    )}
+    {clarityId && (
+      <Fragment>
+        {/* Microsoft Clarity：先放调用队列，脚本加载后自动处理 */}
+        <script is:inline>window.clarity = window.clarity || function () { (window.clarity.q = window.clarity.q || []).push(arguments); };</script>
+        <script is:inline async src={`https://www.clarity.ms/tag/${clarityId}`}></script>
       </Fragment>
     )}
   </head>
