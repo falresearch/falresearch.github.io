@@ -61,16 +61,11 @@ const baiduId = import.meta.env.PROD ? site.analytics.baidu : '';
       } catch (e) {}
     </script>
     {baiduId && (
-      <script is:inline define:vars={{ baiduId }}>
-        // 百度统计
-        var _hmt = _hmt || [];
-        (function () {
-          var hm = document.createElement('script');
-          hm.src = 'https://hm.baidu.com/hm.js?' + baiduId;
-          var s = document.getElementsByTagName('script')[0];
-          s.parentNode.insertBefore(hm, s);
-        })();
-      </script>
+      <Fragment>
+        {/* 百度统计：_hmt 必须是全局变量，所以不用 define:vars（它会包一层函数作用域） */}
+        <script is:inline>window._hmt = window._hmt || [];</script>
+        <script is:inline async src={`https://hm.baidu.com/hm.js?${baiduId}`}></script>
+      </Fragment>
     )}
   </head>
   <body>
