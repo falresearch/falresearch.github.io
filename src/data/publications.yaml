@@ -1,12 +1,14 @@
 # 论文列表（整理自 Google Scholar，2026-10，仅收录 2020 年及以后）。
 # type 可选：journal / conference / preprint
-# 作者名与 people.yaml 中的 name / aliases 一致时会自动加粗（同名但非本组成员可用 notMembers 排除）；作者较多时 Scholar 只显示前若干位，这里以 "et al." 表示
+# authors 写完整作者列表（核对自 Crossref / PubMed）。作者名与 people.yaml 中的 name / aliases 一致时会自动加粗：
+#   负责人在所有论文中加粗；学生只在其 achievements 里列出的论文中加粗，并标注“本科生”（避免同名的其他作者被误标）
+#   同名但非本组成员也可用 notMembers 排除
 # tags 为论文的主题标签（目前仅作整理用）；研究方向下显示哪些论文，在 research.yaml 的 pubs 中指定
 
 # ---------- 2026 ----------
 - id: jmir-2026-autism-llm
   title: "Large Language Model–Assisted Annotation Framework for Cross-Platform Analysis of Online Autism Communities: Implications for Parent Education and Digital Support"
-  authors: Y Xu, J Ma, Y Hu, Y Liu, Y Chen, W Feng, C Zhang, L Zhang, X Zhang, et al.
+  authors: Y Xu, J Ma, Y Hu, Y Liu, Y Chen, W Feng, C Zhang, L Zhang, X Zhang, R Huang
   venue: "Journal of Medical Internet Research, 28, e85290"
   year: 2026
   type: journal
@@ -23,7 +25,7 @@
   tags: [Federated Learning, 6G]
 - id: jmir-2025-llm-ehr
   title: "Evaluation and Bias Analysis of Large Language Models in Generating Synthetic Electronic Health Records: Comparative Study"
-  authors: R Huang, H Wu, Y Yuan, Y Xu, H Qian, C Zhang, X Wei, S Lu, X Zhang, et al.
+  authors: R Huang, H Wu, Y Yuan, Y Xu, H Qian, C Zhang, X Wei, S Lu, X Zhang, J Kan, C Wan, Y Liu
   venue: "Journal of Medical Internet Research, 27, e65317"
   year: 2025
   type: journal
@@ -33,7 +35,7 @@
 # ---------- 2024 ----------
 - id: jmir-2024-hypertension
   title: "Development and Validation of a Nomogram-Based Model to Predict Primary Hypertension Within the Next Year in Children and Adolescents: Retrospective Cohort Study"
-  authors: C Qin, L Peng, Y Liu, X Zhang, S Miao, Z Wei, W Feng, H Zhang, C Wan, et al.
+  authors: C Qin, L Peng, Y Liu, X Zhang, S Miao, Z Wei, W Feng, H Zhang, C Wan, Y Yu, S Lu, R Huang, X Zhang
   venue: "Journal of Medical Internet Research, 26, e58686"
   year: 2024
   type: journal
@@ -55,12 +57,13 @@
   tags: [5G, Diabetes, Edge Computing]
 - id: bmc-2024-ontology
   title: Development and Application of Chinese Medical Ontology for Diabetes Mellitus
-  authors: J Hu, Z Huang, X Ge, Y Shen, Y Xu, Z Zhang, G Zhou, J Wang, S Lu, Y Yu, et al.
+  authors: J Hu, Z Huang, X Ge, Y Shen, Y Xu, Z Zhang, G Zhou, J Wang, S Lu, Y Yu, C Wan, X Zhang, R Huang, Y Liu, G Cheng
   notMembers: [Y Xu]   # 此处的 Y Xu 不是课题组的徐怡帆
   venue: "BMC Medical Informatics and Decision Making, 24(1), 18"
   year: 2024
   type: journal
   tags: [Ontology, Clinical NLP, Diabetes]
+  links: { doi: "https://doi.org/10.1186/s12911-023-02405-y" }
 - id: tiis-2024-fl-covid
   title: Edge Computing Model Based on Federated Learning for COVID-19 Clinical Outcome Prediction in the 5G Era
   authors: R Huang, Z Wei, W Feng, Y Li, C Zhang, C Qiu, M Chen
@@ -102,11 +105,12 @@
   tags: [Wireless]
 - id: fpsyt-2022-depression
   title: "Association Between Depressive Symptoms and Diagnosis of Diabetes and Its Complications: A Network Analysis in Electronic Health Records"
-  authors: C Wan, W Feng, R Ma, H Ma, J Wang, R Huang, X Zhang, M Jing, H Yang, et al.
+  authors: C Wan, W Feng, R Ma, H Ma, J Wang, R Huang, X Zhang, M Jing, H Yang, H Yu, Y Liu
   venue: "Frontiers in Psychiatry, 13, 966758"
   year: 2022
   type: journal
   tags: [EHR, Diabetes]
+  links: { doi: "https://doi.org/10.3389/fpsyt.2022.966758" }
 - id: arxiv-2022-event-extraction
   title: End-to-End Clinical Event Extraction from Chinese Electronic Health Record
   authors: W Feng, R Huang, Y Yu, H Sun, Y Liu
@@ -117,17 +121,19 @@
   links: { pdf: "https://arxiv.org/abs/2208.09354" }
 - id: bmjopen-2022-t2d
   title: "Validation of Type 2 Diabetes Subgroups by Simple Clinical Parameters: A Retrospective Cohort Study of NHANES Data from 1999 to 2014"
-  authors: J Xie, H Shao, T Shan, S Jing, Y Shi, J Wang, J Hu, Y Li, R Huang, N Liu, et al.
+  authors: J Xie, H Shao, T Shan, S Jing, Y Shi, J Wang, J Hu, Y Li, R Huang, N Liu, Y Liu
   venue: "BMJ Open, 12(3), e055647"
   year: 2022
   type: journal
   tags: [Clinical Prediction, Diabetes]
+  links: { doi: "https://doi.org/10.1136/bmjopen-2021-055647" }
 
 # ---------- 2020 ----------
 - id: atm-2020-covid
   title: "A Predictive Model for Respiratory Distress in Patients with COVID-19: A Retrospective Study"
-  authors: X Zhang, W Wang, C Wan, G Cheng, Y Yin, K Cao, X Zhang, Z Wang, et al.
+  authors: X Zhang, W Wang, C Wan, G Cheng, Y Yin, K Cao, X Zhang, Z Wang, S Miao, Y Yu, J Hu, R Huang, Y Ge, Y Chen, Y Liu
   venue: "Annals of Translational Medicine, 8(23), 1585"
   year: 2020
   type: journal
   tags: [Clinical Prediction, COVID-19]
+  links: { doi: "https://doi.org/10.21037/atm-20-4977" }

@@ -38,25 +38,52 @@ export async function getPeople() {
 /** LAB MEM 001 */
 export const labMem = (n: number) => `LAB MEM ${String(n).padStart(3, '0')}`;
 
-/** 课题组成员的姓名（中英文），用于在论文作者列表里加粗 */
-let memberNames: Promise<string[]> | undefined;
-export function getMemberNames() {
-  memberNames ??= getPeople().then((people) =>
-    people.flatMap((p) => [p.data.name.zh, p.data.name.en, ...p.data.aliases]).filter((n): n is string => !!n),
+/** 论文作者列表里用来识别课题组成员的信息 */
+export interface AuthorMatcher {
+  names: string[];
+  /** 本科生（含已毕业的本科生），作者名后标注“本科生” */
+  undergrad: boolean;
+  /** 只在这些论文里识别；null 表示所有论文（负责人等） */
+  pubs: Set<string> | null;
+}
+
+/** 学生只在自己 achievements 里列出的论文中识别，避免把同名的其他作者误标为组员 */
+let authorMatchers: Promise<AuthorMatcher[]> | undefined;
+export function getAuthorMatchers() {
+  authorMatchers ??= getPeople().then((people) =>
+    people.map((p) => {
+      const student = p.data.role === 'undergrad' || p.data.role === 'alumni';
+      return {
+        names: [p.data.name.zh, p.data.name.en, ...p.data.aliases].filter((n): n is string => !!n),
+        undergrad: student,
+        pubs: student ? new Set(p.data.achievements.map((a) => a.pub).filter((id): id is string => !!id)) : null,
+      };
+    }),
   );
-  return memberNames;
+  return authorMatchers;
 }
 
 const escapeHtml = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
-/** 作者名后加 * 表示通讯作者，会保留星号显示 */
-export function highlightAuthors(authors: string, memberNames: string[]): string {
+/** 加粗本论文中的课题组成员，本科生后加标注；作者名后加 * 表示通讯作者，会保留星号显示 */
+export function highlightAuthors(
+  authors: string,
+  pubId: string,
+  matchers: AuthorMatcher[],
+  notMembers: string[],
+  undergradLabel: string,
+): string {
   return authors
     .split(',')
     .map((a) => {
       const name = a.trim();
+      const bare = name.replace(/\*$/, '');
       const safe = escapeHtml(name);
-      return memberNames.includes(name.replace(/\*$/, '')) ? `<strong>${safe}</strong>` : safe;
+      if (notMembers.includes(bare)) return safe;
+      const m = matchers.find((m) => m.names.includes(bare) && (!m.pubs || m.pubs.has(pubId)));
+      if (!m) return safe;
+      const tag = m.undergrad ? `<span class="pub__ug">${escapeHtml(undergradLabel)}</span>` : '';
+      return `<strong>${safe}</strong>${tag}`;
     })
     .join(', ');
 }
